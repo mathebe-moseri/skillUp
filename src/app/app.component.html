@@ -215,7 +215,13 @@
         </defs>
       </svg>
       <h1 class="text-xl font-bold text-yellow-600 hover:text-4xl transition-all duration-300">Hello, {{ title }}</h1>
-      <p class="text-sm font-bold text-green-600 hover:text-2xl transition-all duration-300">Congratulations! Your app is running. 🎉</p>
+      <p class="text-sm font-bold text-green-600 hover:text-2xl transition-all duration-300">
+        Congratulations! Your app is
+          <span class="inline-block overflow-hidden w-24 align-middle">
+            <span #wordEl class="inline-block"></span>
+          </span>
+        🎉
+      </p>
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">
