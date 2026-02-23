@@ -9,5 +9,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './container.component.css'
 })
 export class ContainerComponent {
-@Input() className = '';
+
+  @Input() className = '';
+
 }
