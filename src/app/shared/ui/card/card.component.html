@@ -1,1 +1,31 @@
-<p>card works!</p>
+<div class="
+    group
+    relative
+    text-center
+    shadow-[0_25px_70px_-40px_rgba(15,23,42,0.35)]
+    transition-all duration-300
+    hover:-translate-y-1
+    hover:shadow-[0_35px_90px_-45px_rgba(15,23,42,0.45)]
+    mt-16
+  ">
+
+  <div class="
+      mx-auto mb-4
+      flex h-12 w-20
+      items-center justify-center
+      rounded-xl
+      ring-1 ring-sky-500/20
+      text-sky-600
+      text-xl
+      transition-transform duration-300
+      group-hover:scale-110
+    ">
+    <ng-content select="[icon]">
+    </ng-content>
+  </div>
+
+  <h3 class="text-sm font-semibold text-slate-800">
+    {{ title }}
+  </h3>
+
+</div>
