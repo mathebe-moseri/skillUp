@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { ContainerComponent } from '../../../shared/ui/container/container.component';
 import { ButtonComponent } from "../../../shared/ui/button/button.component";
 import { DropdownComponent } from "../../../shared/ui/dropdown/dropdown.component";
+
 import { Learning_Path } from '../../../constants';
+
 
 @Component({
   selector: 'app-nav',
@@ -14,5 +18,24 @@ import { Learning_Path } from '../../../constants';
 export class NavComponent {
 
   learningPath = Learning_Path;
+  isLearningOpen: boolean = false;
+
+  constructor(private router: Router) {}
+
+  open() {
+    this.isLearningOpen = true;
+  }
+
+  close() {
+    this.isLearningOpen = false;
+  }
+
+  onSelect(item: any) {
+
+    // navigate + close
+    this.router.navigateByUrl(item.route);
+    this.close();
+    
+  }
 
 }
