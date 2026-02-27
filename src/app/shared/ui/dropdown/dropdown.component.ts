@@ -11,5 +11,6 @@ import { Component, Input } from '@angular/core';
 export class DropdownComponent {
 
   @Input() items: any[] = [];
+  @Input() open: boolean = false;
 
 }
