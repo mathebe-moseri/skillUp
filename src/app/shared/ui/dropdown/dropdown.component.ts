@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-dropdown',
@@ -13,4 +13,9 @@ export class DropdownComponent {
   @Input() items: any[] = [];
   @Input() open: boolean = false;
 
+  @Output() itemSelect = new EventEmitter<any>();
+
+  select(item: any) {
+    this.itemSelect.emit(item);
+  }
 }
