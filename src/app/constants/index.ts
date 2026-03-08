@@ -18,13 +18,13 @@ export const Learning_Path: navItem[] = [
 ];
 
 export const Learning_Path_Actions: navItem[] = [
-  {
-    label: 'Open Learning Page',
-    hasPreview: true,
-    featured: true,
-    icon: '+',
-    description: 'Concepts, video lessons, and guided explanations'
-  },
+{
+  label: 'Start Learning',
+  hasPreview: true,
+  featured: true,
+  icon: '▶',
+  description: 'Concepts, video lessons, and guided explanations'
+},
   {
     label: 'Practice Exercises',
     hasPreview: true,

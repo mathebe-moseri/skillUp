@@ -93,7 +93,7 @@ export class NavComponent {
 
     this.closeTimeout = setTimeout(() => {
       this.closeMenu();
-    }, 200);
+    }, 600);
   }
 
   cancelClose(): void {
