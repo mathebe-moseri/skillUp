@@ -21,42 +21,23 @@ import { Learning_Path, Learning_Path_Actions, navItem } from '../../../constant
 })
 export class NavComponent {
   isOpen = false;
-  isPinned = false;
   hoveredItem: string | null = null;
 
   learningPath: navItem[] = Learning_Path;
   learningPathActions: navItem[] = Learning_Path_Actions;
 
-  openMenu(): void {
-    if (!this.isPinned) {
-      this.isOpen = true;
+  toggleMenu(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isOpen = !this.isOpen;
+
+    if (!this.isOpen) {
+      this.hoveredItem = null;
     }
   }
 
   closeMenu(): void {
-    if (!this.isPinned) {
-      this.isOpen = false;
-      this.hoveredItem = null;
-    }
-  }
-
-  toggleMenu(event: MouseEvent): void {
-    event.stopPropagation();
-
-    if (this.isOpen && this.isPinned) {
-      this.isOpen = false;
-      this.isPinned = false;
-      this.hoveredItem = null;
-      return;
-    }
-
-    if (this.isOpen && !this.isPinned) {
-      this.isPinned = true;
-      return;
-    }
-
-    this.isOpen = true;
-    this.isPinned = true;
+    this.isOpen = false;
+    this.hoveredItem = null;
   }
 
   onItemEnter(item: navItem): void {
