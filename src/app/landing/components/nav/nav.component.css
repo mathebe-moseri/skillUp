@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.dropdown-shell {
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.16);
+  transform-origin: top left;
+  transition:
+    width 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms ease,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: width, transform, opacity;
+}
+
+.preview-panel {
+  transition: width 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: width;
+}

@@ -1,35 +1,151 @@
 <app-container>
-  
   <div class="absolute z-10 mt-2 select-none">
-    <div class="flex items-center">
-      <div class="relative w-12 h-10 
-                bg-gradient-to-br from-yellow-400 to-sky-500 
-                rounded-full flex items-center justify-center shadow-lg">
-        <span class="text-white font-bold">&lt; // &gt;</span>
-        <div class="absolute -top-1 -right-1 
-                  w-4 h-4 bg-yellow-400 rounded-full">
-        </div>
+    <div class="flex items-center gap-2">
+      <div
+        class="relative flex h-10 w-12 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-sky-500 shadow-lg">
+        <span class="font-bold text-white">&lt; // &gt;</span>
+        <div class="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-yellow-400"></div>
       </div>
+
       <div class="text-2xl font-extrabold tracking-tight">
-        <span class="text-gray-400 rounded">skill</span>
+        <span class="rounded text-gray-400">skill</span>
         <span class="text-sky-500">Up</span>
       </div>
     </div>
   </div>
 
-  <nav class="flex justify-end items-center h-16 ">
-    <div class="flex gap-20 font-semibold text-gray-500 z-10">
+  <nav class="flex h-16 items-center justify-end">
+    <div class="z-10 flex items-center gap-10 font-semibold text-gray-500">
 
-<button class="flex items-center gap-1">
-  <span>Learning Path</span>
-  <app-dropdown [isOpen]="false"></app-dropdown>
-</button>
+      <!-- Learning Path -->
+      <div class="relative" (mouseenter)="openMenu()" (mouseleave)="closeMenu()">
+        <button
+          class="flex items-center gap-2 rounded-xl px-3 py-2 text-[15px] font-semibold text-slate-600 transition-all duration-300 ease-out hover:text-sky-500">
+          <span>Learning Path</span>
+          <app-dropdown [isOpen]="isOpen"></app-dropdown>
+        </button>
 
-      <button>Practice</button>
-      <button>Resources</button>
-      <button class="border border-sky-300 rounded-lg px-4">Log in</button>
+<div
+  *ngIf="isOpen"
+  class="dropdown-shell absolute left-0 top-full overflow-hidden rounded-[28px] border border-slate-200/70 bg-white/95 p-3 backdrop-blur-2xl"
+  [ngClass]="hoveredItem ? 'w-[560px]' : 'w-[300px]'"
+>
+  <div class="flex items-start">
+    <!-- LEFT -->
+    <div
+      class="w-[240px] p-3 transition-all duration-300 ease-out"
+      [ngClass]="hoveredItem ? 'border-r border-slate-100' : ''"
+      
+    >
+      <div class="px-3 pb-4 pt-2">
+        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+          Learning Paths
+        </p>
+        <p class="mt-2 max-w-[180px] text-sm leading-7 text-slate-500">
+          Pick a path and start building real front-end skills.
+        </p>
+      </div>
+
+      <button
+        *ngFor="let item of learningPath"
+        type="button"
+        (mouseenter)="onItemEnter(item)"
+        class="group flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left transition-all duration-300 ease-out"
+        [ngClass]="
+          hoveredItem === item.label
+            ? 'bg-sky-50 text-sky-600 shadow-[inset_0_0_0_1px_rgba(14,165,233,0.08)]'
+            : item.hasPreview
+              ? 'text-slate-700 hover:bg-slate-50'
+              : 'text-slate-700'
+        "
+      >
+        <span class="text-[15px] font-medium tracking-tight">
+          {{ item.label }}
+        </span>
+
+        <svg
+          *ngIf="item.hasPreview"
+          class="h-4 w-4 shrink-0 transition-all duration-300 ease-out"
+          [ngClass]="
+            hoveredItem === item.label
+              ? 'translate-x-0 opacity-100 text-sky-500'
+              : '-translate-x-1 opacity-0 text-slate-300'
+          "
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- RIGHT -->
+    <div
+      class="preview-panel overflow-hidden"
+      [ngClass]="hoveredItem ? 'w-[300px]' : 'w-0'"
+    >
+      <div
+        class="min-w-[300px] p-5 transition-all duration-300 ease-out"
+        [ngClass]="
+          hoveredItem
+            ? 'translate-x-0 opacity-100'
+            : 'translate-x-3 opacity-0 pointer-events-none'
+        "
+      >
+        <div class="px-2 pb-5">
+          <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+            For {{ hoveredItem }}
+          </p>
+
+          <h3 class="mt-2 text-[26px] font-semibold tracking-tight text-slate-900">
+            Continue learning
+          </h3>
+
+          <p class="mt-2 max-w-[240px] text-sm leading-7 text-slate-500">
+            Lessons, practice, quizzes, and interview preparation in one elegant flow.
+          </p>
+        </div>
+
+        <div class="grid gap-2">
+          <button
+            *ngFor="let action of learningPathActions"
+            class="group flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-[15px] font-medium text-slate-700 transition-all duration-300 ease-out hover:bg-slate-50 hover:text-sky-600"
+          >
+            <span>{{ action.label }}</span>
+
+            <span
+              class="text-slate-300 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:text-sky-500"
+            >
+              →
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      </div>
+
+      <button class="transition-colors duration-300 ease-out hover:text-sky-500">
+        Practice
+      </button>
+
+      <button class="transition-colors duration-300 ease-out hover:text-sky-500">
+        Resources
+      </button>
+
+      <button
+        class="rounded-xl border border-sky-300 px-5 py-2.5 text-slate-700 transition-all duration-300 ease-out hover:border-sky-400 hover:text-sky-500">
+        Log in
+      </button>
+
       <app-button>Get Started Free</app-button>
     </div>
   </nav>
-
 </app-container>
