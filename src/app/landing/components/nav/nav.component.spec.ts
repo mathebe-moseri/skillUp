@@ -15,6 +15,22 @@ import { Learning_Path, Learning_Path_Actions, navItem } from '../../../constant
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
+onItemClick(_t30: navItem,$event: PointerEvent) {
+throw new Error('Method not implemented.');
+}
+activeItem: any;
+cancelClose() {
+throw new Error('Method not implemented.');
+}
+scheduleClose() {
+throw new Error('Method not implemented.');
+}
+getActionIconClass(_t50: navItem): string|string[]|Set<string>|{ [klass: string]: any; }|null|undefined {
+throw new Error('Method not implemented.');
+}
+getActionCardClass(_t50: navItem): string|string[]|Set<string>|{ [klass: string]: any; }|null|undefined {
+throw new Error('Method not implemented.');
+}
 toggleMenu($event: PointerEvent) {
 throw new Error('Method not implemented.');
 }

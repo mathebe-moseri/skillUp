@@ -15,150 +15,111 @@
   </div>
 
   <nav class="flex h-16 items-center justify-end">
-    <div class="z-10 flex items-center gap-10 font-semibold text-gray-500">
-      <div class="relative" (mouseleave)="closeMenu()">
-        <button
-          type="button"
-          (click)="toggleMenu($event)"
-          class="flex items-center gap-2 rounded-xl px-3 py-2 text-[15px] font-semibold text-slate-600 transition-all duration-300 ease-out hover:text-sky-500"
-        >
+    <div class="z-10 flex items-center gap-5 font-semibold text-gray-500">
+      <div class="relative" (mouseenter)="cancelClose()" (mouseleave)="scheduleClose()">
+        <button type="button" (click)="toggleMenu($event)"
+          class="flex items-center gap-2 rounded-xl px-3 py-2 text-[15px] font-semibold transition-all duration-300 ease-out hover:text-sky-500"
+          [ngClass]="isOpen ? 'text-sky-500' : 'text-slate-600'">
           <span>Learning Path</span>
           <app-dropdown [isOpen]="isOpen"></app-dropdown>
         </button>
 
-        <div
-          *ngIf="isOpen"
-          class="dropdown-shell absolute left-0 top-full overflow-hidden rounded-[28px] border border-slate-200/70 bg-white/95 p-3 backdrop-blur-2xl"
-          [ngClass]="hoveredItem ? 'w-[620px]' : 'w-[300px]'"
-        >
+        <div *ngIf="isOpen" (mouseenter)="cancelClose()" (mouseleave)="scheduleClose()"
+          (click)="$event.stopPropagation()"
+          class="dropdown-shell absolute top-full mt-1 rounded-[28px] border border-slate-200/70 bg-white/95 px-3 pt-3 pb-6 backdrop-blur-2xl"
+          [ngClass]="activeItem ? 'w-[980px]' : 'w-[320px]'">
           <div class="flex items-start">
             <!-- Left panel -->
-            <div
-              class="w-[240px] p-3 transition-all duration-300 ease-out"
-              [ngClass]="hoveredItem ? 'border-r border-slate-100' : ''"
-            >
-              <div class="px-3 pb-4 pt-2">
+            <div class="w-[235px] shrink-0 p-4 transition-all duration-300 ease-out"
+              [ngClass]="activeItem ? 'border-r border-slate-100' : ''">
+              <div class="px-3 pb-3 pt-2">
                 <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
                   Learning Paths
                 </p>
-                <p class="mt-2 max-w-[180px] text-sm leading-7 text-slate-500">
+                <p class="mt-2 max-w-[175px] text-sm leading-7 text-slate-500">
                   Pick a path and start building real front-end skills.
                 </p>
               </div>
 
-              <button
-                *ngFor="let item of learningPath"
-                type="button"
-                (mouseenter)="onItemEnter(item)"
-                class="group flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left transition-all duration-300 ease-out"
+              <button *ngFor="let item of learningPath" type="button" (mouseenter)="onItemEnter(item)"
+                (click)="onItemClick(item, $event)"
+                class="group flex w-full items-center justify-between rounded-2xl px-4 py-2.5 text-left transition-all duration-300 ease-out"
                 [ngClass]="
-                  hoveredItem === item.label
+                  activeItem?.label === item.label
                     ? 'bg-sky-50 text-sky-600 shadow-[inset_0_0_0_1px_rgba(14,165,233,0.08)]'
                     : item.hasPreview
                       ? 'text-slate-700 hover:bg-slate-50'
                       : 'text-slate-700'
-                "
-              >
+                ">
                 <span class="text-[15px] font-medium tracking-tight">
                   {{ item.label }}
                 </span>
 
-                <svg
-                  *ngIf="item.hasPreview"
-                  class="h-4 w-4 shrink-0 transition-all duration-300 ease-out"
-                  [ngClass]="
-                    hoveredItem === item.label
+                <svg *ngIf="item.hasPreview" class="h-4 w-4 shrink-0 transition-all duration-300 ease-out" [ngClass]="
+                    activeItem?.label === item.label
                       ? 'translate-x-0 opacity-100 text-sky-500'
                       : '-translate-x-1 opacity-0 text-slate-300'
-                  "
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                >
+                  " fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
             </div>
 
             <!-- Right preview panel -->
-            <div class="preview-panel overflow-hidden" [ngClass]="hoveredItem ? 'w-[360px]' : 'w-0'">
-              <div
-                class="min-w-[360px] p-5 transition-all duration-300 ease-out"
-                [ngClass]="
-                  hoveredItem
-                    ? 'translate-x-0 opacity-100'
-                    : 'translate-x-3 opacity-0 pointer-events-none'
-                "
-              >
-                <div class="px-2 pb-5">
+            <div class="preview-panel overflow-hidden pb-6 transition-all duration-300 ease-out"
+              [ngClass]="activeItem ? 'w-[710px]' : 'w-0'" [ngClass]="activeItem ? 'w-[710px]' : 'w-0'">
+              <div class="min-w-[710px] px-4 pt-4 pb-2 transition-all duration-300 ease-out" [ngClass]="
+    activeItem
+      ? 'translate-x-0 opacity-100'
+      : 'translate-x-3 opacity-0 pointer-events-none'
+  ">
+                <div class="px-2 pb-4">
                   <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                    For {{ selectedTopic }}
+                    For {{ activeItem?.label }}
                   </p>
 
-                  <h3 class="mt-2 text-[26px] font-semibold tracking-tight text-slate-900">
+                  <h3 class="mt-2 text-[24px] font-semibold tracking-tight text-slate-900">
                     {{ getPreviewTitle() }}
                   </h3>
 
-                  <p class="mt-2 max-w-[280px] text-sm leading-7 text-slate-500">
+                  <p class="mt-2 max-w-[430px] text-sm leading-7 text-slate-500">
                     {{ getPreviewDescription() }}
                   </p>
                 </div>
 
-                <div class="grid gap-3">
-                  <button
-                    *ngFor="let action of learningPathActions"
-                    type="button"
-                    (click)="onActionClick(action)"
+                <div class="grid gap-3 -m-2">
+                  <button *ngFor="let action of learningPathActions" type="button" (click)="onActionClick(action)"
                     class="group w-full text-left transition-all duration-300 ease-out"
-                    [ngClass]="action.featured ? '' : ''"
-                  >
-                    <!-- Featured first action -->
-<div
-  *ngIf="action.featured"
-  class="rounded-[24px] border border-slate-200 bg-white px-4 py-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out group-hover:border-sky-200 group-hover:bg-sky-50 group-hover:shadow-[0_16px_34px_rgba(14,165,233,0.10)]"
->
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div
-        class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-lg font-bold text-slate-500 transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-sky-400 group-hover:to-blue-500 group-hover:text-white"
-      >
-        +
-      </div>
-
-      <div>
-        <p class="text-[15px] font-semibold text-slate-800 transition-colors duration-300 group-hover:text-sky-600">
-          Open Learning Page
-        </p>
-        <p class="mt-1 text-sm text-slate-500">
-          Concepts, video lessons, and guided explanations
-        </p>
-      </div>
-    </div>
-
-    <span
-      class="text-2xl text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-sky-500"
-    >
-      →
-    </span>
-  </div>
-</div>
-
-                    <!-- Normal actions -->
+                    [ngClass]="action.featured ? 'col-span-2' : ''">
                     <div
-                      *ngIf="!action.featured"
-                      class="flex items-center justify-between rounded-2xl px-4 py-3 text-[15px] font-medium text-slate-700 transition-all duration-300 ease-out hover:bg-slate-50 hover:text-sky-600"
-                    >
-                      <div class="flex items-center gap-2">
-                        <span>{{ action.label }}</span>
+                      class="flex min-h-[88px] items-center justify-between rounded-[22px] border px-4 py-2 shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out"
+                      [ngClass]="getActionCardClass(action)">
+                      <div class="flex min-w-0 items-center gap-3">
+                        <div
+                          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-sm font-semibold transition-all duration-300"
+                          [ngClass]="getActionIconClass(action)">
+                          {{ action.icon }}
+                        </div>
 
-                        <span *ngIf="action.locked" class="text-[14px]">🔒</span>
-                        <span *ngIf="action.label === 'Interview Arena'" class="text-[14px]">🏆</span>
+                        <div class="min-w-0">
+                          <div class="flex items-center gap-2">
+                            <p
+                              class="truncate text-[15px] font-semibold text-slate-800 transition-colors duration-300 group-hover:text-sky-600">
+                              {{ action.label }}
+                            </p>
+
+                            <span *ngIf="action.locked" class="shrink-0 text-[13px]">🔒</span>
+                            <span *ngIf="action.label === 'Interview Arena'" class="shrink-0 text-[13px]">🏆</span>
+                          </div>
+
+                          <p class="mt-1 max-w-[250px] text-sm leading-6 text-slate-500">
+                            {{ action.description }}
+                          </p>
+                        </div>
                       </div>
 
                       <span
-                        class="text-slate-300 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:text-sky-500"
-                      >
+                        class="ml-3 shrink-0 text-xl text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-sky-500">
                         →
                       </span>
                     </div>
@@ -178,10 +139,8 @@
         Resources
       </button>
 
-      <button
-        type="button"
-        class="rounded-xl border border-sky-300 px-5 py-2.5 text-slate-700 transition-all duration-300 ease-out hover:border-sky-400 hover:text-sky-500"
-      >
+      <button type="button"
+        class="rounded-xl border border-sky-300 px-5 py-2.5 text-slate-700 transition-all duration-300 ease-out hover:border-sky-400 hover:text-sky-500">
         Log in
       </button>
 
