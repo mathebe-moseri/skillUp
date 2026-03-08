@@ -15,6 +15,19 @@ import { Learning_Path, Learning_Path_Actions, navItem } from '../../../constant
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
+toggleMenu($event: PointerEvent) {
+throw new Error('Method not implemented.');
+}
+onActionClick(_t50: navItem) {
+throw new Error('Method not implemented.');
+}
+getPreviewDescription() {
+throw new Error('Method not implemented.');
+}
+getPreviewTitle() {
+throw new Error('Method not implemented.');
+}
+selectedTopic: any;
 resetPreview() {
 throw new Error('Method not implemented.');
 }

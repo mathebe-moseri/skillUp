@@ -17,18 +17,26 @@
   <nav class="flex h-16 items-center justify-end">
     <div class="z-10 flex items-center gap-10 font-semibold text-gray-500">
       <div class="relative" (mouseleave)="closeMenu()">
-        <button type="button" (click)="toggleMenu($event)"
-          class="flex items-center gap-2 rounded-xl px-3 py-2 text-[15px] font-semibold text-slate-600 transition-all duration-300 ease-out hover:text-sky-500">
+        <button
+          type="button"
+          (click)="toggleMenu($event)"
+          class="flex items-center gap-2 rounded-xl px-3 py-2 text-[15px] font-semibold text-slate-600 transition-all duration-300 ease-out hover:text-sky-500"
+        >
           <span>Learning Path</span>
           <app-dropdown [isOpen]="isOpen"></app-dropdown>
         </button>
 
-        <div *ngIf="isOpen"
+        <div
+          *ngIf="isOpen"
           class="dropdown-shell absolute left-0 top-full overflow-hidden rounded-[28px] border border-slate-200/70 bg-white/95 p-3 backdrop-blur-2xl"
-          [ngClass]="hoveredItem ? 'w-[560px]' : 'w-[300px]'">
+          [ngClass]="hoveredItem ? 'w-[620px]' : 'w-[300px]'"
+        >
           <div class="flex items-start">
-            <div class="w-[240px] p-3 transition-all duration-300 ease-out"
-              [ngClass]="hoveredItem ? 'border-r border-slate-100' : ''">
+            <!-- Left panel -->
+            <div
+              class="w-[240px] p-3 transition-all duration-300 ease-out"
+              [ngClass]="hoveredItem ? 'border-r border-slate-100' : ''"
+            >
               <div class="px-3 pb-4 pt-2">
                 <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
                   Learning Paths
@@ -38,7 +46,10 @@
                 </p>
               </div>
 
-              <button *ngFor="let item of learningPath" type="button" (mouseenter)="onItemEnter(item)"
+              <button
+                *ngFor="let item of learningPath"
+                type="button"
+                (mouseenter)="onItemEnter(item)"
                 class="group flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left transition-all duration-300 ease-out"
                 [ngClass]="
                   hoveredItem === item.label
@@ -46,50 +57,111 @@
                     : item.hasPreview
                       ? 'text-slate-700 hover:bg-slate-50'
                       : 'text-slate-700'
-                ">
+                "
+              >
                 <span class="text-[15px] font-medium tracking-tight">
                   {{ item.label }}
                 </span>
 
-                <svg *ngIf="item.hasPreview" class="h-4 w-4 shrink-0 transition-all duration-300 ease-out" [ngClass]="
+                <svg
+                  *ngIf="item.hasPreview"
+                  class="h-4 w-4 shrink-0 transition-all duration-300 ease-out"
+                  [ngClass]="
                     hoveredItem === item.label
                       ? 'translate-x-0 opacity-100 text-sky-500'
                       : '-translate-x-1 opacity-0 text-slate-300'
-                  " fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  "
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
             </div>
 
-            <div class="preview-panel overflow-hidden" [ngClass]="hoveredItem ? 'w-[300px]' : 'w-0'">
-              <div class="min-w-[300px] p-5 transition-all duration-300 ease-out" [ngClass]="
+            <!-- Right preview panel -->
+            <div class="preview-panel overflow-hidden" [ngClass]="hoveredItem ? 'w-[360px]' : 'w-0'">
+              <div
+                class="min-w-[360px] p-5 transition-all duration-300 ease-out"
+                [ngClass]="
                   hoveredItem
                     ? 'translate-x-0 opacity-100'
                     : 'translate-x-3 opacity-0 pointer-events-none'
-                ">
+                "
+              >
                 <div class="px-2 pb-5">
                   <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                    For {{ hoveredItem }}
+                    For {{ selectedTopic }}
                   </p>
 
                   <h3 class="mt-2 text-[26px] font-semibold tracking-tight text-slate-900">
-                    Start learning
+                    {{ getPreviewTitle() }}
                   </h3>
 
-                  <p class="mt-2 max-w-[240px] text-sm leading-7 text-slate-500">
-                    Lessons, practice, quizzes, and interview preparation in one elegant flow.
+                  <p class="mt-2 max-w-[280px] text-sm leading-7 text-slate-500">
+                    {{ getPreviewDescription() }}
                   </p>
                 </div>
 
-                <div class="grid gap-2">
-                  <button *ngFor="let action of learningPathActions" type="button"
-                    class="group flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-[15px] font-medium text-slate-700 transition-all duration-300 ease-out hover:bg-slate-50 hover:text-sky-600">
-                    <span>{{ action.label }}</span>
+                <div class="grid gap-3">
+                  <button
+                    *ngFor="let action of learningPathActions"
+                    type="button"
+                    (click)="onActionClick(action)"
+                    class="group w-full text-left transition-all duration-300 ease-out"
+                    [ngClass]="action.featured ? '' : ''"
+                  >
+                    <!-- Featured first action -->
+<div
+  *ngIf="action.featured"
+  class="rounded-[24px] border border-slate-200 bg-white px-4 py-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out group-hover:border-sky-200 group-hover:bg-sky-50 group-hover:shadow-[0_16px_34px_rgba(14,165,233,0.10)]"
+>
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-lg font-bold text-slate-500 transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-sky-400 group-hover:to-blue-500 group-hover:text-white"
+      >
+        +
+      </div>
 
-                    <span
-                      class="text-slate-300 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:text-sky-500">
-                      →
-                    </span>
+      <div>
+        <p class="text-[15px] font-semibold text-slate-800 transition-colors duration-300 group-hover:text-sky-600">
+          Open Learning Page
+        </p>
+        <p class="mt-1 text-sm text-slate-500">
+          Concepts, video lessons, and guided explanations
+        </p>
+      </div>
+    </div>
+
+    <span
+      class="text-2xl text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-sky-500"
+    >
+      →
+    </span>
+  </div>
+</div>
+
+                    <!-- Normal actions -->
+                    <div
+                      *ngIf="!action.featured"
+                      class="flex items-center justify-between rounded-2xl px-4 py-3 text-[15px] font-medium text-slate-700 transition-all duration-300 ease-out hover:bg-slate-50 hover:text-sky-600"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span>{{ action.label }}</span>
+
+                        <span *ngIf="action.locked" class="text-[14px]">🔒</span>
+                        <span *ngIf="action.label === 'Interview Arena'" class="text-[14px]">🏆</span>
+                      </div>
+
+                      <span
+                        class="text-slate-300 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:text-sky-500"
+                      >
+                        →
+                      </span>
+                    </div>
                   </button>
                 </div>
               </div>
@@ -106,8 +178,10 @@
         Resources
       </button>
 
-      <button type="button"
-        class="rounded-xl border border-sky-300 px-5 py-2.5 text-slate-700 transition-all duration-300 ease-out hover:border-sky-400 hover:text-sky-500">
+      <button
+        type="button"
+        class="rounded-xl border border-sky-300 px-5 py-2.5 text-slate-700 transition-all duration-300 ease-out hover:border-sky-400 hover:text-sky-500"
+      >
         Log in
       </button>
 
