@@ -1,6 +1,7 @@
 export interface navItem {
   label: string;
   hasPreview: boolean;
+  status?: 'available' | 'coming-soon';
   locked?: boolean;
   featured?: boolean;
   description?: string;
@@ -8,12 +9,12 @@ export interface navItem {
 }
 
 export const Learning_Path: navItem[] = [
-  { label: 'Web Basics (Start Here)', hasPreview: false },
-  { label: 'HTML', hasPreview: false },
-  { label: 'CSS', hasPreview: false },
-  { label: 'JavaScript', hasPreview: true },
-  { label: 'TypeScript', hasPreview: false },
-  { label: 'Angular', hasPreview: true }
+  { label: 'WebBasics', hasPreview: false, status: 'coming-soon' },
+  { label: 'HTML', hasPreview: false, status: 'coming-soon' },
+  { label: 'CSS', hasPreview: false, status: 'coming-soon' },
+  { label: 'JavaScript', hasPreview: true, status: 'available' },
+  { label: 'TypeScript', hasPreview: false, status: 'coming-soon' },
+  { label: 'Angular', hasPreview: true, status: 'available' }
 ];
 
 export const Learning_Path_Actions: navItem[] = [

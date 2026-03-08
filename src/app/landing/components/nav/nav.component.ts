@@ -35,8 +35,16 @@ export class NavComponent {
     private router: Router
   ) {}
 
-  get showPreviewPanel(): boolean {
-    return !!this.activeItem?.hasPreview;
+  get showRightPanel(): boolean {
+    return !!this.activeItem;
+  }
+
+  get showActionCards(): boolean {
+    return this.activeItem?.status === 'available' && !!this.activeItem?.hasPreview;
+  }
+
+  get showComingSoonPanel(): boolean {
+    return this.activeItem?.status === 'coming-soon';
   }
 
   toggleMenu(event: MouseEvent): void {
@@ -44,6 +52,10 @@ export class NavComponent {
 
     this.isOpen = !this.isOpen;
     this.uiStateService.setOverlayState(this.isOpen);
+
+    if (this.isOpen && !this.activeItem) {
+      this.activeItem = this.learningPath[0];
+    }
 
     if (!this.isOpen) {
       this.resetMenuState();
@@ -92,13 +104,31 @@ export class NavComponent {
   }
 
   getPreviewTitle(): string {
-    return this.showPreviewPanel ? 'Choose your next step' : '';
+    if (!this.activeItem) return '';
+
+    if (this.showActionCards) {
+      return 'Choose your next step';
+    }
+
+    return 'This path is coming soon';
   }
 
   getPreviewDescription(): string {
-    return this.showPreviewPanel && this.activeItem
-      ? `Lessons, guided explanations, practice, and quizzes for ${this.activeItem.label} in one elegant flow.`
-      : '';
+    if (!this.activeItem) return '';
+
+    if (this.showActionCards) {
+      return `Lessons, guided explanations, practice, and quizzes for ${this.activeItem.label} in one elegant flow.`;
+    }
+
+    return `${this.activeItem.label} is planned for a future release. For now, learners can fully explore JavaScript and Angular while we continue expanding the platform.`;
+  }
+
+  getComingSoonFeatures(): string[] {
+    return [
+      'Concept overviews and guided lessons',
+      'Practice exercises and quizzes',
+      'Interview-focused learning flow'
+    ];
   }
 
   getActionIconClass(action: navItem): string {
@@ -120,7 +150,7 @@ export class NavComponent {
   }
 
   onActionClick(action: navItem): void {
-    if (!this.activeItem || !this.activeItem.hasPreview) {
+    if (!this.activeItem || !this.activeItem.hasPreview || this.activeItem.status !== 'available') {
       return;
     }
 
@@ -149,6 +179,13 @@ export class NavComponent {
       default:
         console.log(`${action.label} clicked for ${this.activeItem.label}`);
         break;
+    }
+  }
+
+  goToPath(label: string): void {
+    const item = this.learningPath.find(path => path.label === label);
+    if (item) {
+      this.activeItem = item;
     }
   }
 }
