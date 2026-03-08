@@ -24,6 +24,6 @@ export const Learning_Path_Actions = [
   { label: 'Weekly Challenge 🔒', hasPreview: true },
 
   // Premium mastery stage
-  { label: 'Compete 🏆  🔒', hasPreview: true, locked: true }
+  { label: 'Interview Arena 🏆', hasPreview: true, locked: true }
 ];
 

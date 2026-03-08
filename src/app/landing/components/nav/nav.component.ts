@@ -7,6 +7,8 @@ import { DropdownComponent } from '../../../shared/ui/dropdown/dropdown.componen
 
 import { Learning_Path, Learning_Path_Actions, navItem } from '../../../constants';
 
+import { UiStateService } from '../../../shared/state/ui-state.service';
+
 @Component({
   selector: 'app-nav',
   standalone: true,
@@ -26,9 +28,13 @@ export class NavComponent {
   learningPath: navItem[] = Learning_Path;
   learningPathActions: navItem[] = Learning_Path_Actions;
 
+  constructor(private uiStateService: UiStateService) {}
+
   toggleMenu(event: MouseEvent): void {
     event.stopPropagation();
     this.isOpen = !this.isOpen;
+
+    this.uiStateService.setOverlayState(this.isOpen);
 
     if (!this.isOpen) {
       this.hoveredItem = null;
@@ -38,6 +44,8 @@ export class NavComponent {
   closeMenu(): void {
     this.isOpen = false;
     this.hoveredItem = null;
+
+     this.uiStateService.closeOverlay();
   }
 
   onItemEnter(item: navItem): void {

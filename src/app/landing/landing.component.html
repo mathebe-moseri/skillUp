@@ -1,6 +1,13 @@
-<app-nav></app-nav>
+<div class="relative min-h-screen">
+  <app-nav></app-nav>
 
-<app-container>
-  <app-hero></app-hero>
-  <app-cta></app-cta>
-</app-container>
+  <app-container>
+    <div
+      class="transition-all duration-300"
+      [class.blur-md]="uiStateService.overlayOpen$ | async"
+    >
+      <app-hero></app-hero>
+      <app-cta></app-cta>
+    </div>
+  </app-container>
+</div>
