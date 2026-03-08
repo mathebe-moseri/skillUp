@@ -10,7 +10,12 @@ import { Learning_Path, Learning_Path_Actions, navItem } from '../../../constant
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [ContainerComponent, ButtonComponent, DropdownComponent, CommonModule],
+  imports: [
+    CommonModule,
+    ContainerComponent,
+    ButtonComponent,
+    DropdownComponent
+  ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
@@ -22,35 +27,43 @@ export class NavComponent {
   learningPath: navItem[] = Learning_Path;
   learningPathActions: navItem[] = Learning_Path_Actions;
 
-  openMenu() {
-    this.isOpen = true;
+  openMenu(): void {
+    if (!this.isPinned) {
+      this.isOpen = true;
+    }
   }
 
-  closeMenu() {
+  closeMenu(): void {
     if (!this.isPinned) {
       this.isOpen = false;
       this.hoveredItem = null;
     }
   }
 
-  toggleMenu(event: MouseEvent) {
+  toggleMenu(event: MouseEvent): void {
     event.stopPropagation();
 
     if (this.isOpen && this.isPinned) {
       this.isOpen = false;
       this.isPinned = false;
       this.hoveredItem = null;
-    } else {
-      this.isOpen = true;
-      this.isPinned = true;
+      return;
     }
+
+    if (this.isOpen && !this.isPinned) {
+      this.isPinned = true;
+      return;
+    }
+
+    this.isOpen = true;
+    this.isPinned = true;
   }
 
-  onItemEnter(item: navItem) {
+  onItemEnter(item: navItem): void {
     this.hoveredItem = item.hasPreview ? item.label : null;
   }
 
-  resetPreview() {
+  resetPreview(): void {
     this.hoveredItem = null;
   }
 }
