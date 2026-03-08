@@ -15,6 +15,7 @@ import { Learning_Path, Learning_Path_Actions, navItem } from '../../../constant
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
+showPreviewPanel: any;
 onItemClick(_t30: navItem,$event: PointerEvent) {
 throw new Error('Method not implemented.');
 }

@@ -33,7 +33,11 @@ export class NavComponent {
   constructor(
     private uiStateService: UiStateService,
     private router: Router
-  ) { }
+  ) {}
+
+  get showPreviewPanel(): boolean {
+    return !!this.activeItem?.hasPreview;
+  }
 
   toggleMenu(event: MouseEvent): void {
     event.stopPropagation();
@@ -62,20 +66,11 @@ export class NavComponent {
   }
 
   onItemEnter(item: navItem): void {
-    if (!item.hasPreview) {
-      return;
-    }
-
     this.activeItem = item;
   }
 
   onItemClick(item: navItem, event: MouseEvent): void {
     event.stopPropagation();
-
-    if (!item.hasPreview) {
-      return;
-    }
-
     this.activeItem = item;
   }
 
@@ -97,11 +92,11 @@ export class NavComponent {
   }
 
   getPreviewTitle(): string {
-    return this.activeItem ? 'Choose your next step' : '';
+    return this.showPreviewPanel ? 'Choose your next step' : '';
   }
 
   getPreviewDescription(): string {
-    return this.activeItem
+    return this.showPreviewPanel && this.activeItem
       ? `Lessons, guided explanations, practice, and quizzes for ${this.activeItem.label} in one elegant flow.`
       : '';
   }
@@ -125,7 +120,9 @@ export class NavComponent {
   }
 
   onActionClick(action: navItem): void {
-    if (!this.activeItem) return;
+    if (!this.activeItem || !this.activeItem.hasPreview) {
+      return;
+    }
 
     const topicSlug = this.activeItem.label
       .toLowerCase()
