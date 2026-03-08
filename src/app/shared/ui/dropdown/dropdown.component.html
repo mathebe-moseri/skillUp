@@ -1,24 +1,12 @@
-<div 
-  *ngIf="open" 
-  class="absolute 
-    bg-white 
-    shadow-xl 
-    rounded-lg 
-    p-2 
-    w-[300px] 
-    -ml-[300px]"
+<div class="flex mt-1">
+  <svg
+    class="w-4 h-4 text-gray-500 transition-transform duration-200"
+    [class.rotate-180]="isOpen"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    viewBox="0 0 24 24"
   >
-  <button 
-    *ngFor="let item of items" 
-    class="block 
-      w-full 
-      text-left 
-      px-6 
-      py-2 
-      hover:bg-sky-100 
-      rounded-full" 
-    (click)="select(item)"
-    >
-    {{ item.label }}
-  </button>
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 15l6-6 6 6" />
+  </svg>
 </div>

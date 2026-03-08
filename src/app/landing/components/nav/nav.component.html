@@ -18,14 +18,12 @@
   </div>
 
   <nav class="flex justify-end items-center h-16 ">
-    <div class="flex gap-6 font-semibold text-gray-500 z-10">
-      <div (mouseenter)="open()" (mouseleave)="close()" class="relative inline-flex items-center">
-        <button>
-          Learning Path
-            <app-dropdown [items]="learningPath" [open]="isLearningOpen" (itemSelect)="onSelect($event)">
-            </app-dropdown>
-        </button>
-      </div>
+    <div class="flex gap-20 font-semibold text-gray-500 z-10">
+
+<button class="flex items-center gap-1">
+  <span>Learning Path</span>
+  <app-dropdown [isOpen]="false"></app-dropdown>
+</button>
 
       <button>Practice</button>
       <button>Resources</button>

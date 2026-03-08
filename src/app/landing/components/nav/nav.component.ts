@@ -17,25 +17,6 @@ import { Learning_Path } from '../../../constants';
 })
 export class NavComponent {
 
-  learningPath = Learning_Path;
-  isLearningOpen: boolean = false;
 
-  constructor(private router: Router) {}
-
-  open() {
-    this.isLearningOpen = true;
-  }
-
-  close() {
-    this.isLearningOpen = false;
-  }
-
-  onSelect(item: any) {
-
-    // navigate + close
-    this.router.navigateByUrl(item.route);
-    this.close();
-    
-  }
 
 }
