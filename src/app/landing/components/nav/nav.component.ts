@@ -147,7 +147,7 @@ getPreviewDescription(): string {
     return `Lessons, practice, and quizzes for ${this.activeItem.label}.`;
   }
 
-  return `Explore JavaScript and Angular while this path is being prepared.`;
+  return `Explore Angular while this path is being prepared.`;
 }
 
   getComingSoonFeatures(): string[] {
