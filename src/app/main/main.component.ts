@@ -11,3 +11,17 @@ import { LandingComponent } from '../landing/landing.component';
 export class MainComponent {
 
 }
+// Learn Deeply
+// Understand concepts instead of memorizing code.
+
+// Practice Real Problems
+// Apply what you learn through guided exercises.
+
+// Quiz
+// Test your understanding with thinking-based questions.
+
+// Track Growth
+// Monitor your mastery and learning progress.
+
+// Interview Arena
+// Compete with other learners once you unlock mastery.

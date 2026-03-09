@@ -1,6 +1,29 @@
 import { Routes } from '@angular/router';
-import { NavComponent } from './landing/components/nav/nav.component';
+
+import { LandingComponent } from './landing/landing.component';
+import { LearnComponent } from './landing/components/learn/learn.component';
+import { PracticeComponent } from './landing/pages/practice/practice.component';
+import { QuizComponent } from './landing/pages/quiz/quiz.component';
 
 export const routes: Routes = [
-  {path: 'nav', component: NavComponent}
+  {
+    path: '',
+    component: LandingComponent
+  },
+  {
+    path: 'learn/:topic',
+    component: LearnComponent
+  },
+  {
+    path: 'practice/:topic',
+    component: PracticeComponent
+  },
+  {
+    path: 'quiz/:topic',
+    component: QuizComponent
+  },
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];

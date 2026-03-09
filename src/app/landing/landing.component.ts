@@ -15,8 +15,9 @@ import { UiStateService } from '../shared/state/ui-state.service';
     NavComponent,
     HeroComponent,
     CtaComponent,
-    ContainerComponent
-  ],
+    ContainerComponent,
+
+],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })
