@@ -52,57 +52,53 @@
         </p>
       </div>
 
-      <button
-        *ngFor="let item of learningPath"
-        type="button"
-        (mouseenter)="onItemEnter(item)"
-        (click)="onItemClick(item, $event)"
-        class="group flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left transition-all duration-300 ease-out"
-        [ngClass]="
-          activeItem?.label === item.label
-            ? 'bg-sky-50 text-sky-600 shadow-[inset_0_0_0_1px_rgba(14,165,233,0.08)]'
-            : 'text-slate-700 hover:bg-slate-50'
-        "
-      >
-        <div class="min-w-0">
-          <span class="block text-[15px] font-medium tracking-tight">
-            {{ item.label }}
-          </span>
-        </div>
-
-        <div class="ml-3 flex shrink-0 items-center gap-2">
-<span
-  *ngIf="item.status"
-  class="px-3 py-1 text-[9px] font-semibold rounded-full"
-  [ngClass]="{
-    'bg-gray-100 text-gray-500': item.status === 'coming-soon',
-    'bg-green-100 text-green-600': item.status === 'available'
-  }"
+<button
+  *ngFor="let item of learningPath"
+  type="button"
+  (mouseenter)="onItemEnter(item)"
+  (click)="onItemClick(item, $event)"
+  class="group relative grid w-full grid-cols-[1fr_auto] items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all duration-300 ease-out"
+  [ngClass]="
+    activeItem?.label === item.label
+      ? 'bg-sky-50 text-sky-600 shadow-[inset_0_0_0_1px_rgba(14,165,233,0.08)]'
+      : 'text-slate-700 hover:bg-slate-50'
+  "
 >
-  {{ item.status === 'available' ? 'Available' : 'Coming Soon' }}
-</span>
+  <span class="min-w-0 truncate pr-2 text-[15px] font-medium tracking-tight">
+    {{ item.label }}
+  </span>
 
-          <svg
-            *ngIf="item.status === 'available'"
-            class="h-4 w-4 shrink-0 transition-all duration-300 ease-out"
-            [ngClass]="
-              activeItem?.label === item.label
-                ? 'translate-x-0 opacity-100 text-sky-500'
-                : '-translate-x-1 opacity-0 text-slate-300 group-hover:translate-x-0 group-hover:opacity-100'
-            "
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </div>
-      </button>
+  <span
+    *ngIf="item.status"
+    class="inline-flex h-7 min-w-[92px] items-center justify-center rounded-full px-3 text-[10px] font-semibold whitespace-nowrap"
+    [ngClass]="{
+      'bg-gray-100 text-gray-500': item.status === 'coming-soon',
+      'bg-green-100 text-green-600': item.status === 'available'
+    }"
+  >
+    {{ item.status === 'available' ? 'Available' : 'Coming Soon' }}
+  </span>
+
+  <svg
+    *ngIf="item.status === 'available'"
+    class="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 shrink-0 transition-all duration-300 ease-out"
+    [ngClass]="
+      activeItem?.label === item.label
+        ? 'translate-x-0 opacity-100 text-sky-500'
+        : '-translate-x-1 opacity-0 text-slate-300 group-hover:translate-x-0 group-hover:opacity-100'
+    "
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M9 5l7 7-7 7"
+    />
+  </svg>
+</button>
     </div>
 
     <!-- Right panel -->
@@ -128,107 +124,127 @@
           </p>
         </div>
 
-        <!-- Available paths -->
-        <div *ngIf="showActionCards" class="grid gap-3 -m-2">
-          <button
-            *ngFor="let action of learningPathActions"
-            type="button"
-            (click)="onActionClick(action)"
-            class="group w-full text-left transition-all duration-300 ease-out"
-            [ngClass]="action.featured ? 'col-span-2' : ''"
+<div class="mt-2">
+  <!-- Available paths -->
+  <div *ngIf="showActionCards" class="grid gap-3">
+    <button
+      *ngFor="let action of learningPathActions"
+      type="button"
+      (click)="onActionClick(action)"
+      class="group w-full text-left transition-all duration-300 ease-out"
+      [ngClass]="action.featured ? 'col-span-2' : ''"
+    >
+      <div
+        class="flex min-h-[88px] items-center justify-between rounded-[22px] border px-4 py-2 shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out"
+        [ngClass]="getActionCardClass(action)"
+      >
+        <div class="flex min-w-0 items-center gap-3">
+          <div
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-sm font-semibold transition-all duration-300"
+            [ngClass]="getActionIconClass(action)"
           >
-            <div
-              class="flex min-h-[88px] items-center justify-between rounded-[22px] border px-4 py-2 shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out"
-              [ngClass]="getActionCardClass(action)"
-            >
-              <div class="flex min-w-0 items-center gap-3">
-                <div
-                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-sm font-semibold transition-all duration-300"
-                  [ngClass]="getActionIconClass(action)"
-                >
-                  {{ action.icon }}
-                </div>
+            {{ action.icon }}
+          </div>
 
-                <div class="min-w-0">
-                  <div class="flex items-center gap-2">
-                    <p
-                      class="truncate text-[15px] font-semibold text-slate-800 transition-colors duration-300 group-hover:text-sky-600"
-                    >
-                      {{ action.label }}
-                    </p>
-
-                    <span *ngIf="action.locked" class="shrink-0 text-[13px]">🔒</span>
-                    <span *ngIf="action.label === 'Interview Arena'" class="shrink-0 text-[13px]">🏆</span>
-                  </div>
-
-                  <p class="mt-1 max-w-[250px] text-sm leading-6 text-slate-500">
-                    {{ action.description }}
-                  </p>
-                </div>
-              </div>
-
-              <span
-                class="ml-3 shrink-0 text-xl text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-sky-500"
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <p
+                class="truncate text-[15px] font-semibold text-slate-800 transition-colors duration-300 group-hover:text-sky-600"
               >
-                →
-              </span>
-            </div>
-          </button>
-        </div>
-
-        <!-- Coming soon panel -->
-        <div
-          *ngIf="showComingSoonPanel"
-          class="rounded-[24px] border border-slate-200 bg-slate-50/70 p-6 shadow-[0_8px_24px_rgba(15,23,42,0.04)]"
-        >
-          <div class="flex items-start justify-between gap-6">
-            <div class="max-w-[460px]">
-              <div class="mb-3 inline-flex rounded-full bg-white px-3 py-1 text-xs font-semibold tracking-[0.16em] text-slate-400 shadow-sm">
-                ROADMAP
-              </div>
-
-              <h4 class="text-[20px] font-semibold tracking-tight text-slate-900">
-                This learning track is being prepared carefully
-              </h4>
-
-              <p class="mt-3 text-sm leading-7 text-slate-500">
-                We are currently focusing on JavaScript and Angular first so the first released paths feel complete, practical, and interview-ready.
+                {{ action.label }}
               </p>
 
-              <div class="mt-5 space-y-3">
-                <div
-                  *ngFor="let feature of getComingSoonFeatures()"
-                  class="flex items-center gap-3 text-sm text-slate-600"
-                >
-                  <span class="flex h-6 w-6 items-center justify-center rounded-full bg-white text-sky-500 shadow-sm">
-                    ✓
-                  </span>
-                  <span>{{ feature }}</span>
-                </div>
-              </div>
-
-              <div class="mt-6 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  (click)="goToPath('JavaScript')"
-                  class="rounded-xl bg-sky-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
-                >
-                  Explore JavaScript
-                </button>
-
-                <button
-                  type="button"
-                  (click)="goToPath('Angular')"
-                  class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-sky-200 hover:text-sky-600"
-                >
-                  Explore Angular
-                </button>
-              </div>
+              <span *ngIf="action.locked" class="shrink-0 text-[13px]">🔒</span>
+              <span *ngIf="action.label === 'Interview Arena'" class="shrink-0 text-[13px]">🏆</span>
             </div>
 
-            <div class="hidden h-[220px] w-[180px] rounded-[24px] border border-dashed border-slate-200 bg-white/80 lg:block"></div>
+            <p class="mt-1 max-w-[250px] text-sm leading-6 text-slate-500">
+              {{ action.description }}
+            </p>
           </div>
         </div>
+
+        <span
+          class="ml-3 shrink-0 text-xl text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-sky-500"
+        >
+          →
+        </span>
+      </div>
+    </button>
+  </div>
+
+  <!-- Coming soon panel -->
+  <div
+    *ngIf="showComingSoonPanel"
+    class="rounded-[24px] border border-slate-200 bg-slate-50/70 px-6 py-5 shadow-[0_8px_24px_rgba(15,23,42,0.04)]"
+  >
+    <div class="flex items-center justify-between gap-6">
+      <div class="max-w-[320px]">
+        <div class="mb-3 inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-slate-400 shadow-sm">
+          COMING SOON
+        </div>
+
+        <h4 class="text-[22px] font-semibold tracking-tight text-slate-900">
+          {{ activeItem?.label }} is on the way
+        </h4>
+
+        <p class="mt-2 text-sm text-slate-500">
+          Explore available paths for now.
+        </p>
+
+        <div class="mt-5 flex flex-wrap gap-3">
+          <button
+            type="button"
+            (click)="goToPath('JavaScript')"
+            class="rounded-xl bg-sky-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
+          >
+            JavaScript
+          </button>
+
+          <button
+            type="button"
+            (click)="goToPath('Angular')"
+            class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-sky-200 hover:text-sky-600"
+          >
+            Angular
+          </button>
+        </div>
+      </div>
+
+      <div
+        #comingSoonVisual
+        class="relative hidden h-[220px] w-[220px] overflow-hidden rounded-[24px] border border-dashed border-slate-200 bg-white lg:block"
+      >
+        <div class="absolute inset-0 bg-gradient-to-br from-sky-50 via-white to-amber-50"></div>
+
+        <div
+          #ring
+          class="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full border border-sky-100"
+        ></div>
+
+        <div
+          #core
+          class="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-blue-500 text-white shadow-lg"
+        >
+          <span class="text-lg font-bold">&lt;/&gt;</span>
+        </div>
+
+        <div #dot1 class="absolute left-[38px] top-[48px] h-3.5 w-3.5 rounded-full bg-sky-400 shadow"></div>
+        <div #dot2 class="absolute right-[42px] top-[64px] h-3 w-3 rounded-full bg-yellow-400 shadow"></div>
+        <div #dot3 class="absolute bottom-[44px] left-[54px] h-4 w-4 rounded-full bg-cyan-300 shadow"></div>
+
+        <p
+          #comingSoonText
+          class="absolute bottom-5 left-1/2 w-[140px] -translate-x-1/2 text-center text-xs font-medium text-slate-400"
+        >
+          Coming soon
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
       </div>
     </div>
   </div>
