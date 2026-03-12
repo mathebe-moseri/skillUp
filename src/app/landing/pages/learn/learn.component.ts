@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavComponent } from '../../components/nav/nav.component';
+import { UiStateService } from '../../../shared/state/ui-state.service';
 
 @Component({
   selector: 'app-learn',
@@ -14,7 +15,10 @@ export class LearnComponent {
 decoratorTopics: any;
 dataBindingTopics: any;
 routeTopics: any;
-  constructor(private router: Router) {}
+  constructor(
+    private uiStateService: UiStateService,
+    private router: Router
+  ) {}
 
   selectedConcept = '';
   selectedSubtopic = '';

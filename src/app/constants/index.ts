@@ -9,12 +9,13 @@ export interface navItem {
 }
 
 export const Learning_Path: navItem[] = [
-  { label: 'WebBasics', hasPreview: false, status: 'coming-soon' },
-  { label: 'HTML', hasPreview: false, status: 'coming-soon' },
-  { label: 'CSS', hasPreview: false, status: 'coming-soon' },
-  { label: 'JavaScript', hasPreview: false, status: 'coming-soon' },
-  { label: 'TypeScript', hasPreview: false, status: 'coming-soon' },
-  { label: 'Angular', hasPreview: true, status: 'available' }
+  // { label: 'WebBasics', hasPreview: false, status: 'coming-soon' },
+  // { label: 'HTML', hasPreview: false, status: 'coming-soon' },
+  // { label: 'CSS', hasPreview: false, status: 'coming-soon' },
+
+  // { label: 'TypeScript', hasPreview: false, status: 'coming-soon' },
+  { label: 'Angular', hasPreview: true, status: 'available' },
+    { label: 'JavaScript', hasPreview: false, status: 'coming-soon' }
 ];
 
 export const Learning_Path_Actions: navItem[] = [
