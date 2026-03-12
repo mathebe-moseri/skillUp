@@ -6,7 +6,7 @@
       
       <!-- LEFT -->
       <section class="p-6">
-        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="concept-dropdown relative rounded-2xl border border-slate-200 bg-white shadow-sm">
           <button
             type="button"
             (click)="toggleConceptMenu()"
@@ -14,10 +14,14 @@
           >
             <div>
               <p class="text-sm font-semibold text-slate-900">
-                {{ selectedConcept || 'Select a concept' }}
+                {{ selectedSubtopic || selectedConcept || 'Select a concept' }}
               </p>
               <p class="text-xs text-slate-500">
-                Choose a topic and expand its subtopics
+                {{
+                  selectedSubtopic
+                    ? selectedConcept
+                    : 'Choose a topic and expand its subtopics'
+                }}
               </p>
             </div>
 
@@ -28,17 +32,22 @@
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
 
           <div
-            class="overflow-hidden transition-all duration-300 ease-in-out"
-            [ngClass]="isConceptMenuOpen ? 'max-h-[520px] border-t border-slate-200' : 'max-h-0'"
+            *ngIf="isConceptMenuOpen"
+            class="absolute left-0 right-0 top-full z-30 mt-2 max-h-[520px] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl"
           >
-            <div class="space-y-2 p-3">
-
-              <div class="rounded-2xl border border-slate-200 bg-slate-50">
+            <div class="space-y-2">
+              <!-- Data Binding -->
+              <!-- <div class="rounded-2xl border border-slate-200 bg-slate-50">
                 <button
                   type="button"
                   (click)="selectConceptOnly('Data Binding')"
@@ -53,7 +62,12 @@
                     viewBox="0 0 24 24"
                     (click)="$event.stopPropagation(); toggleSubmenu('Data Binding')"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </button>
 
@@ -72,8 +86,9 @@
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> -->
 
+              <!-- Decorators -->
               <div class="rounded-2xl border border-slate-200 bg-slate-50">
                 <button
                   type="button"
@@ -89,13 +104,18 @@
                     viewBox="0 0 24 24"
                     (click)="$event.stopPropagation(); toggleSubmenu('Decorators')"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </button>
 
                 <div
                   class="overflow-hidden transition-all duration-300 ease-in-out"
-                  [ngClass]="expandedConcept === 'Decorators' ? 'max-h-96' : 'max-h-0'"
+                  [ngClass]="expandedConcept === 'Decorators' ? 'max-h-[420px]' : 'max-h-0'"
                 >
                   <div class="space-y-1 px-3 pb-3">
                     <button
@@ -110,7 +130,8 @@
                 </div>
               </div>
 
-              <div class="rounded-2xl border border-slate-200 bg-slate-50">
+              <!-- Routes -->
+              <!-- <div class="rounded-2xl border border-slate-200 bg-slate-50">
                 <button
                   type="button"
                   (click)="selectConceptOnly('Routes')"
@@ -125,7 +146,12 @@
                     viewBox="0 0 24 24"
                     (click)="$event.stopPropagation(); toggleSubmenu('Routes')"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </button>
 
@@ -144,18 +170,9 @@
                     </button>
                   </div>
                 </div>
-              </div>
-
+              </div> -->
             </div>
           </div>
-        </div>
-
-        <div *ngIf="selectedConcept" class="mt-4 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-4">
-          <p class="text-sm font-semibold text-sky-700">Current Selection</p>
-          <p class="mt-1 text-sm text-slate-700">
-            <span class="font-bold">{{ selectedConcept }}</span>
-            <span *ngIf="selectedSubtopic"> → {{ selectedSubtopic }}</span>
-          </p>
         </div>
 
         <div class="mt-5 rounded-3xl bg-white p-5 shadow-2xl">
@@ -164,21 +181,29 @@
           </p>
 
           <h3 class="mt-2 text-sm font-extrabold text-gray-600">
-            What you need to know about the <span class="underline">&#64;Input() decorator!</span>
+            What you need to know about the
+            <span class="underline">{{ selectedSubtopic || '&#64;Input()' }}</span>
           </h3>
 
           <p class="mt-3 text-sm leading-6 text-slate-600">
-            A <span class="font-semibold text-slate-900">decorator</span> in Angular is a special TypeScript function
-            that adds metadata to a class property, method or parameter.
+            A
+            <span class="font-semibold text-slate-900">decorator</span>
+            in Angular is a special TypeScript function that adds metadata to a class
+            property, method or parameter.
           </p>
 
           <p class="mt-3 text-sm leading-6 text-slate-600">
-            An <span class="font-semibold text-slate-900">&#64;Input()</span> is a decorator that marks a class
-            property as bindable, allowing it to receive data from a parent component.
+            An
+            <span class="font-semibold text-slate-900">&#64;Input()</span>
+            is a decorator that marks a class property as bindable, allowing it to
+            receive data from a parent component.
           </p>
 
           <p class="mt-3 text-sm leading-6 text-slate-600">
-            An <span class="font-semibold text-slate-900">&#64;Input()</span> allows you to create generic components that can be reused with different data coming from different parent components.
+            An
+            <span class="font-semibold text-slate-900">&#64;Input()</span>
+            allows you to create generic components that can be reused with different
+            data coming from different parent components.
           </p>
 
           <button
@@ -193,7 +218,9 @@
 
       <!-- RIGHT -->
       <section class="relative overflow-hidden p-6">
-        <div class="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full blur-3xl"></div>
+        <div
+          class="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full blur-3xl"
+        ></div>
 
         <div class="relative">
           <div class="mb-6 flex items-center gap-4">
@@ -230,7 +257,6 @@
           </div>
         </div>
       </section>
-
     </section>
   </div>
 </div>

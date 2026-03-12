@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavComponent } from '../../components/nav/nav.component';
@@ -12,9 +12,6 @@ import { UiStateService } from '../../../shared/state/ui-state.service';
   templateUrl: './learn.component.html',
 })
 export class LearnComponent {
-decoratorTopics: any;
-dataBindingTopics: any;
-routeTopics: any;
   constructor(
     private uiStateService: UiStateService,
     private router: Router
@@ -25,48 +22,48 @@ routeTopics: any;
 
   isConceptMenuOpen = false;
   expandedConcept: string | null = null;
+  currentQuestionIndex = 0;
 
-    currentQuestionIndex = 0;
+  dataBindingTopics: string[] = [
+    'Interpolation',
+    'Property Binding',
+    'Event Binding',
+    'Two-Way Binding',
+  ];
+
+  decoratorTopics: string[] = [
+    '@Input()',
+    // '@Output()',
+    // '@ViewChild()',
+    // '@ViewChildren()',
+    // '@ContentChild()',
+    // '@ContentChildren()',
+    // '@HostBinding()',
+    // '@HostListener()',
+  ];
+
+  routeTopics: string[] = [
+    'RouterModule',
+    'routerLink',
+    'router-outlet',
+    'Route Parameters',
+    'Child Routes',
+    'Lazy Loading',
+    'Route Guards',
+  ];
 
   angularConcepts = [
     {
       name: 'Data Binding',
-      subtopics: [
-        'Interpolation',
-        'Property Binding',
-        'Event Binding',
-        'Two-Way Binding',
-      ],
+      subtopics: this.dataBindingTopics,
     },
     {
       name: 'Decorators',
-      subtopics: [
-        '@Component',
-        '@NgModule',
-        '@Input',
-        '@Output',
-        '@Injectable',
-        '@Directive',
-        '@Pipe',
-        '@HostBinding',
-        '@HostListener',
-        '@ViewChild',
-        '@ViewChildren',
-        '@ContentChild',
-        '@ContentChildren',
-      ],
+      subtopics: this.decoratorTopics,
     },
     {
       name: 'Routes',
-      subtopics: [
-        'RouterModule',
-        'routerLink',
-        'router-outlet',
-        'Route Parameters',
-        'Child Routes',
-        'Lazy Loading',
-        'Route Guards',
-      ],
+      subtopics: this.routeTopics,
     },
   ];
 
@@ -95,7 +92,7 @@ routeTopics: any;
     this.selectedConcept = conceptName;
     this.selectedSubtopic = subtopic;
     this.expandedConcept = conceptName;
-    this.isConceptMenuOpen = true;
+    this.isConceptMenuOpen = false;
   }
 
   getSubtopics(conceptName: string): string[] {
@@ -109,7 +106,15 @@ routeTopics: any;
     this.router.navigate(['/quiz']);
   }
 
-goToNextExplanation() {
-  this.currentQuestionIndex++;
-}
+  goToNextExplanation(): void {
+    this.currentQuestionIndex++;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.concept-dropdown')) {
+      this.isConceptMenuOpen = false;
+    }
+  }
 }
