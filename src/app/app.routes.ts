@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { LandingComponent } from './landing/landing.component';
-import { LearnComponent } from './landing/components/learn/learn.component';
+import { LearnComponent } from './landing/pages/learn/learn.component';
 import { PracticeComponent } from './landing/pages/practice/practice.component';
 import { QuizComponent } from './landing/pages/quiz/quiz.component';
 
