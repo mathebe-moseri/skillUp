@@ -9,7 +9,7 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 const PACKAGE_JSON = `{
-  "name": "angular-input-playground",
+  "name": "angular-input-practice",
   "private": true,
   "scripts": {
     "start": "ng serve --host 0.0.0.0 --port 4200"
@@ -120,7 +120,7 @@ const INDEX_HTML = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Angular Input Playground</title>
+    <title>Angular Input Practice</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
@@ -150,97 +150,45 @@ body {
 }
 `;
 
-const CHILD_COMPONENT_TS = `
-import { Component, Input } from '@angular/core';
-
-@Component({
-  selector: 'app-child',
-  standalone: true,
-  template: \`
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div class="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-        Child Component
-      </div>
-
-      <p class="text-slate-700">
-        This value came from the parent via
-        <code class="rounded bg-slate-100 px-2 py-1 text-sm">&#64;Input()</code>
-      </p>
-
-      <div class="mt-4 rounded-xl bg-indigo-50 p-4 text-indigo-700">
-        {{ message }}
-      </div>
-    </div>
-  \`
-})
-export class ChildComponent {
-  @Input() message = '';
-}
-`;
-
-const APP_COMPONENT_TS = `
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ChildComponent } from './child.component';
+const APP_COMPONENT_TS = `import { Component } from '@angular/core';
+import { ParentComponent } from './parent.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FormsModule, ChildComponent],
-  template: \`
-    <main class="min-h-screen bg-slate-50 p-6 md:p-10">
-      <div class="mx-auto max-w-4xl">
-        <div class="mb-8">
-          <h1 class="text-3xl font-bold tracking-tight text-slate-900">
-            Parent → Child with &#64;Input
-          </h1>
-          <p class="mt-2 text-slate-600">
-            Edit this code in the left editor and watch the preview update.
-          </p>
-        </div>
-
-        <div class="grid gap-6 md:grid-cols-2">
-          <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div class="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Parent Component
-            </div>
-
-            <label class="mb-2 block text-sm font-medium text-slate-700">
-              Message from parent
-            </label>
-
-            <input
-              [(ngModel)]="parentMessage"
-              class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-0 focus:border-indigo-500"
-              placeholder="Type here..."
-            />
-
-            <div class="mt-4 rounded-xl bg-slate-100 p-4 text-slate-700">
-              <div class="text-sm text-slate-500">Current parent value</div>
-              <div class="mt-1 font-medium">{{ parentMessage }}</div>
-            </div>
-          </section>
-
-          <section>
-            <app-child [message]="parentMessage"></app-child>
-          </section>
-        </div>
-
-        <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div class="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-            How it works
-          </div>
-
-          <pre class="overflow-auto rounded-xl bg-slate-900 p-4 text-sm text-slate-100"><code>&lt;app-child [message]="parentMessage"&gt;&lt;/app-child&gt;</code></pre>
-        </div>
-      </div>
-    </main>
-  \`
+  imports: [ParentComponent],
+  templateUrl: './app.component.html'
 })
-export class AppComponent {
-  parentMessage = 'Hello from the parent component!';
-}
+export class AppComponent {}
 `;
+
+const APP_COMPONENT_HTML = ``;
+
+const PARENT_COMPONENT_TS = `import { Component } from '@angular/core';
+import { ChildComponent } from './child.component';
+
+@Component({
+  selector: 'app-parent',
+  standalone: true,
+  imports: [ChildComponent],
+  templateUrl: './parent.component.html'
+})
+export class ParentComponent {}
+`;
+
+const PARENT_COMPONENT_HTML = ``;
+
+const CHILD_COMPONENT_TS = `import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  standalone: true,
+  templateUrl: './child.component.html'
+})
+export class ChildComponent {}
+`;
+
+const CHILD_COMPONENT_HTML = ``;
 
 @Component({
   selector: 'app-practice',
@@ -263,9 +211,8 @@ export class PracticeComponent implements AfterViewInit {
     await sdk.embedProject(
       this.editorHost.nativeElement,
       {
-        title: 'Angular Parent / Child @Input Playground',
-        description:
-          'Standalone Angular playground showing parent-child communication with @Input and Tailwind CSS.',
+        title: 'Angular Input Practice',
+        description: 'Angular editor setup',
         template: 'node',
         files: {
           'package.json': PACKAGE_JSON,
@@ -276,16 +223,23 @@ export class PracticeComponent implements AfterViewInit {
           'src/index.html': INDEX_HTML,
           'src/main.ts': MAIN_TS,
           'src/styles.css': STYLES_CSS,
-          'src/app/child.component.ts': CHILD_COMPONENT_TS,
           'src/app/app.component.ts': APP_COMPONENT_TS,
+          'src/app/app.component.html': APP_COMPONENT_HTML,
+          'src/app/parent.component.ts': PARENT_COMPONENT_TS,
+          'src/app/parent.component.html': PARENT_COMPONENT_HTML,
+          'src/app/child.component.ts': CHILD_COMPONENT_TS,
+          'src/app/child.component.html': CHILD_COMPONENT_HTML,
         },
       },
       {
-        openFile: 'src/app/app.component.ts',
-        view: 'preview',
+        openFile:
+          'src/app/app.component.ts,src/app/app.component.html,src/app/parent.component.ts,src/app/parent.component.html,src/app/child.component.ts,src/app/child.component.html',
+        view: 'default',
         height: 700,
         clickToLoad: false,
         terminalHeight: 35,
+        showSidebar: true,
+        hideNavigation: false,
       }
     );
   }
