@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavComponent } from '../../components/nav/nav.component';
 import { UiStateService } from '../../../shared/state/ui-state.service';
+import { PracticeComponent } from '../practice/practice.component';
 
 @Component({
   selector: 'app-learn',
   standalone: true,
-  imports: [FormsModule, CommonModule, NavComponent],
+  imports: [FormsModule, CommonModule, NavComponent, PracticeComponent],
   templateUrl: './learn.component.html',
 })
 export class LearnComponent {
