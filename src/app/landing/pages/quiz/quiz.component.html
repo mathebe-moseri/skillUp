@@ -1,1 +1,76 @@
-<p>quiz works!</p>
+<div class="quiz-container">
+  <div class="quiz-header">
+    <div class="quiz-heading">
+      <h2>&#64;Input() Decorator Quiz</h2>
+      <p>
+        Test your conceptual understanding of Angular's
+        <strong>&#64;Input()</strong> decorator.
+      </p>
+    </div>
+
+    <div class="quiz-meta">
+      <span>Question {{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
+      <span>{{ getAnsweredCount() }} answered</span>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+  </div>
+
+  <div *ngIf="!submitted" class="question-card">
+    <div class="question-top">
+      <span class="question-number">
+        Question {{ currentQuestionIndex + 1 }}
+      </span>
+    </div>
+
+    <h3>{{ getCurrentQuestion().question }}</h3>
+
+    <div
+      *ngFor="let option of getCurrentQuestion().options; let oIndex = index"
+      class="option"
+    >
+      <label
+        class="option-label"
+        [class.selected]="selectedAnswers[currentQuestionIndex] === oIndex"
+      >
+        <input
+          type="radio"
+          name="current-question"
+          [checked]="selectedAnswers[currentQuestionIndex] === oIndex"
+          (change)="selectAnswer(oIndex)"
+        />
+        <span>{{ option.text }}</span>
+      </label>
+    </div>
+
+    <div class="actions">
+      <button
+        class="reset-btn"
+        (click)="previousQuestion()"
+        [disabled]="currentQuestionIndex === 0"
+      >
+        Previous
+      </button>
+
+      <button
+        class="submit-btn"
+        (click)="finishOrNext()"
+        [disabled]="selectedAnswers[currentQuestionIndex] === -1"
+      >
+        {{ currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="submitted" class="score-card">
+    <h3>Your Score: {{ getScore() }}/{{ questions.length }}</h3>
+    <p class="score-percent">{{ getScorePercentage() }}%</p>
+    <p class="score-message">{{ getScoreMessage() }}</p>
+
+    <div class="actions results-actions">
+      <button class="submit-btn" (click)="resetQuiz()">Try Again</button>
+    </div>
+  </div>
+</div>
