@@ -22,7 +22,8 @@ export class LearnComponent {
 
   isConceptMenuOpen = false;
   expandedConcept: string | null = null;
-  currentQuestionIndex = 0;
+
+  paragraphIndex = 0;
 
   dataBindingTopics: string[] = [
     'Interpolation',
@@ -31,16 +32,7 @@ export class LearnComponent {
     'Two-Way Binding',
   ];
 
-  decoratorTopics: string[] = [
-    '@Input()',
-    // '@Output()',
-    // '@ViewChild()',
-    // '@ViewChildren()',
-    // '@ContentChild()',
-    // '@ContentChildren()',
-    // '@HostBinding()',
-    // '@HostListener()',
-  ];
+  decoratorTopics: string[] = ['@Input()'];
 
   routeTopics: string[] = [
     'RouterModule',
@@ -67,6 +59,25 @@ export class LearnComponent {
     },
   ];
 
+  inputDecoratorParagraphs: string[] = [
+    'A decorator in Angular is a special TypeScript function that adds metadata to a class property, method or parameter.',
+    'An @Input() is a decorator that marks a class property as bindable, allowing it to receive data from a parent component.',
+    'An @Input() allows you to create generic components that can be reused with different data coming from different parent components.',
+    'The purpose of an @Input() is to allow a parent component to pass data into a child component.',
+    'An @Input() is useful when you want a child component to display different values without changing its internal code.',
+    'We use @Input() in Angular to improve reusability, communication between components, and cleaner application structure.',
+    'For example, a parent component can pass a user name, title, product details, or any other value to a child component by using @Input().',
+    'This helps keep components flexible because the same child component can work with different data in different parts of the application.',
+    'Using @Input() also supports a cleaner separation of responsibilities between parent and child components in Angular.',
+  ];
+
+  get visibleParagraphs(): string[] {
+    return this.inputDecoratorParagraphs.slice(
+      this.paragraphIndex,
+      this.paragraphIndex + 3
+    );
+  }
+
   toggleConceptMenu(): void {
     this.isConceptMenuOpen = !this.isConceptMenuOpen;
   }
@@ -80,12 +91,14 @@ export class LearnComponent {
 
     this.selectedConcept = conceptName;
     this.selectedSubtopic = '';
+    this.paragraphIndex = 0;
   }
 
   selectConceptOnly(conceptName: string): void {
     this.selectedConcept = conceptName;
     this.selectedSubtopic = '';
     this.expandedConcept = conceptName;
+    this.paragraphIndex = 0;
   }
 
   selectSubtopic(conceptName: string, subtopic: string): void {
@@ -93,6 +106,7 @@ export class LearnComponent {
     this.selectedSubtopic = subtopic;
     this.expandedConcept = conceptName;
     this.isConceptMenuOpen = false;
+    this.paragraphIndex = 0;
   }
 
   getSubtopics(conceptName: string): string[] {
@@ -107,7 +121,11 @@ export class LearnComponent {
   }
 
   goToNextExplanation(): void {
-    this.currentQuestionIndex++;
+    if (this.paragraphIndex + 3 < this.inputDecoratorParagraphs.length) {
+      this.paragraphIndex += 3;
+    } else {
+      this.paragraphIndex = 0;
+    }
   }
 
   @HostListener('document:click', ['$event'])

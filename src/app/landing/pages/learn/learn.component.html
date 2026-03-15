@@ -1,9 +1,9 @@
 <app-nav />
 
-<div class="bg-sky-100">
+<div>
   <div class="mx-auto max-w-7xl py-8">
     <section class="grid items-start gap-12 xl:grid-cols-[0.7fr_1.3fr]">
-      
+
       <!-- LEFT -->
       <section class="p-6">
         <div class="concept-dropdown relative rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -13,10 +13,10 @@
             class="flex w-full items-center justify-between rounded-2xl px-4 py-4 text-left transition hover:bg-slate-50"
           >
             <div>
-              <p class="text-sm font-semibold text-slate-900">
+              <p class="text-xl font-bold text-yellow-300">
                 {{ selectedSubtopic || selectedConcept || 'Select a concept' }}
               </p>
-              <p class="text-xs text-slate-500">
+              <p class="mt-2 text-xs text-slate-500">
                 {{
                   selectedSubtopic
                     ? selectedConcept
@@ -46,48 +46,6 @@
             class="absolute left-0 right-0 top-full z-30 mt-2 max-h-[520px] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl"
           >
             <div class="space-y-2">
-              <!-- Data Binding -->
-              <!-- <div class="rounded-2xl border border-slate-200 bg-slate-50">
-                <button
-                  type="button"
-                  (click)="selectConceptOnly('Data Binding')"
-                  class="flex w-full items-center justify-between px-4 py-3 text-left transition hover:bg-sky-50"
-                >
-                  <span class="text-sm font-semibold text-slate-800">Data Binding</span>
-                  <svg
-                    class="h-4 w-4 text-slate-500 transition-transform duration-300"
-                    [ngClass]="{ 'rotate-90': expandedConcept === 'Data Binding' }"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    (click)="$event.stopPropagation(); toggleSubmenu('Data Binding')"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-
-                <div
-                  class="overflow-hidden transition-all duration-300 ease-in-out"
-                  [ngClass]="expandedConcept === 'Data Binding' ? 'max-h-60' : 'max-h-0'"
-                >
-                  <div class="space-y-1 px-3 pb-3">
-                    <button
-                      type="button"
-                      *ngFor="let item of dataBindingTopics"
-                      (click)="selectSubtopic('Data Binding', item)"
-                      class="block w-full rounded-xl px-3 py-2 text-left text-sm text-slate-600 transition hover:bg-white hover:text-sky-700"
-                    >
-                      {{ item }}
-                    </button>
-                  </div>
-                </div>
-              </div> -->
-
               <!-- Decorators -->
               <div class="rounded-2xl border border-slate-200 bg-slate-50">
                 <button
@@ -129,48 +87,6 @@
                   </div>
                 </div>
               </div>
-
-              <!-- Routes -->
-              <!-- <div class="rounded-2xl border border-slate-200 bg-slate-50">
-                <button
-                  type="button"
-                  (click)="selectConceptOnly('Routes')"
-                  class="flex w-full items-center justify-between px-4 py-3 text-left transition hover:bg-sky-50"
-                >
-                  <span class="text-sm font-semibold text-slate-800">Routes</span>
-                  <svg
-                    class="h-4 w-4 text-slate-500 transition-transform duration-300"
-                    [ngClass]="{ 'rotate-90': expandedConcept === 'Routes' }"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    (click)="$event.stopPropagation(); toggleSubmenu('Routes')"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-
-                <div
-                  class="overflow-hidden transition-all duration-300 ease-in-out"
-                  [ngClass]="expandedConcept === 'Routes' ? 'max-h-60' : 'max-h-0'"
-                >
-                  <div class="space-y-1 px-3 pb-3">
-                    <button
-                      type="button"
-                      *ngFor="let item of routeTopics"
-                      (click)="selectSubtopic('Routes', item)"
-                      class="block w-full rounded-xl px-3 py-2 text-left text-sm text-slate-600 transition hover:bg-white hover:text-sky-700"
-                    >
-                      {{ item }}
-                    </button>
-                  </div>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
@@ -182,33 +98,21 @@
 
           <h3 class="mt-2 text-sm font-extrabold text-gray-600">
             What you need to know about the
-            <span class="underline">{{ selectedSubtopic || '&#64;Input()' }}</span>
+            <span class="underline">{{ selectedSubtopic || '@Input()' }}</span>
           </h3>
 
-          <p class="mt-3 text-sm leading-6 text-slate-600">
-            A
-            <span class="font-semibold text-slate-900">decorator</span>
-            in Angular is a special TypeScript function that adds metadata to a class
-            property, method or parameter.
-          </p>
-
-          <p class="mt-3 text-sm leading-6 text-slate-600">
-            An
-            <span class="font-semibold text-slate-900">&#64;Input()</span>
-            is a decorator that marks a class property as bindable, allowing it to
-            receive data from a parent component.
-          </p>
-
-          <p class="mt-3 text-sm leading-6 text-slate-600">
-            An
-            <span class="font-semibold text-slate-900">&#64;Input()</span>
-            allows you to create generic components that can be reused with different
-            data coming from different parent components.
-          </p>
+          <div class="min-h-[220px]">
+            <p
+              *ngFor="let paragraph of visibleParagraphs"
+              class="mt-3 text-sm leading-6 text-slate-600"
+            >
+              {{ paragraph }}
+            </p>
+          </div>
 
           <button
             (click)="goToNextExplanation()"
-            class="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-sky-600 px-4 py-2 text-sm font-bold text-white transition hover:scale-[1.02] hover:bg-sky-700"
+            class="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-sky-300 px-4 py-2 text-sm font-bold text-white transition hover:scale-[1.02] hover:bg-sky-400"
           >
             Read more
             <span class="text-lg">→</span>
@@ -241,11 +145,11 @@
           </div>
 
           <div
-            class="mt-6 flex aspect-video w-full items-center justify-center overflow-hidden rounded-[28px] border border-sky-200 bg-white shadow-xl"
+            class="mt-6 flex aspect-video w-full items-center justify-center overflow-hidden rounded-[28px] bg-white shadow-lg shadow-sky-100"
           >
             <div class="text-center">
               <div
-                class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-[0_10px_30px_rgba(37,99,235,0.18)]"
+                class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white"
               >
                 <span class="ml-1 text-3xl text-sky-600">▶</span>
               </div>

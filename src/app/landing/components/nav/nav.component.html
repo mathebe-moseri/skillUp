@@ -1,5 +1,9 @@
 <app-container>
-  <div class="absolute z-10 mt-2 select-none">
+  <a
+    routerLink="/"
+    class="absolute z-10 mt-2 select-none cursor-pointer"
+    aria-label="Go to landing page"
+  >
     <div class="flex items-center gap-2">
       <div
         class="relative flex h-10 w-12 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-sky-500 shadow-lg">
@@ -12,7 +16,7 @@
         <span class="text-sky-500">Up</span>
       </div>
     </div>
-  </div>
+  </a>
 
   <nav class="flex h-16 items-center justify-end">
     <div class="z-10 flex items-center gap-5 font-semibold text-gray-500">
@@ -251,9 +255,9 @@
 </div>
       </div>
 
-      <button type="button" class="transition-colors duration-300 ease-out hover:text-sky-500">
+      <!-- <button type="button" class="transition-colors duration-300 ease-out hover:text-sky-500">
         Practice
-      </button>
+      </button> -->
 
       <button type="button" class="transition-colors duration-300 ease-out hover:text-sky-500">
         Resources

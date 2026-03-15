@@ -15,6 +15,7 @@ import { DropdownComponent } from '../../../shared/ui/dropdown/dropdown.componen
 
 import { Learning_Path, Learning_Path_Actions, navItem } from '../../../constants';
 import { UiStateService } from '../../../shared/state/ui-state.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -23,7 +24,8 @@ import { UiStateService } from '../../../shared/state/ui-state.service';
     CommonModule,
     ContainerComponent,
     ButtonComponent,
-    DropdownComponent
+    DropdownComponent,
+    RouterLink
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
