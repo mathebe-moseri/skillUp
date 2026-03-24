@@ -4,6 +4,7 @@ import { LandingComponent } from './landing/landing.component';
 import { LearnComponent } from './landing/pages/learn/learn.component';
 import { PracticeComponent } from './landing/pages/practice/practice.component';
 import { QuizComponent } from './landing/pages/quiz/quiz.component';
+import { InterviewComponent } from './landing/pages/interview/interview.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'quiz/:topic',
     component: QuizComponent
+  },
+    {
+    path: 'interview/:topic',
+    component: InterviewComponent
   },
   {
     path: '**',

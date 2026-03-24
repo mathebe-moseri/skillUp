@@ -178,38 +178,41 @@ getPreviewDescription(): string {
       : 'border-slate-200 bg-white hover:border-sky-200 hover:bg-sky-50/70 hover:shadow-[0_12px_28px_rgba(15,23,42,0.06)]';
   }
 
-  onActionClick(action: navItem): void {
-    if (!this.activeItem || !this.activeItem.hasPreview || this.activeItem.status !== 'available') {
-      return;
-    }
-
-    const topicSlug = this.activeItem.label
-      .toLowerCase()
-      .replace(/\(.*?\)/g, '')
-      .trim()
-      .replace(/\s+/g, '-');
-
-    switch (action.label) {
-      case 'Start Learning':
-        this.closeMenu();
-        this.router.navigate(['/learn', topicSlug]);
-        break;
-
-      case 'Practice Exercises':
-        this.closeMenu();
-        this.router.navigate(['/practice', topicSlug]);
-        break;
-
-      case 'Take a Quiz':
-        this.closeMenu();
-        this.router.navigate(['/quiz', topicSlug]);
-        break;
-
-      default:
-        console.log(`${action.label} clicked for ${this.activeItem.label}`);
-        break;
-    }
+ onActionClick(action: navItem): void {
+  if (!this.activeItem || !this.activeItem.hasPreview || this.activeItem.status !== 'available') {
+    return;
   }
+
+  const topicSlug = this.activeItem.label
+    .toLowerCase()
+    .replace(/\(.*?\)/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+
+  this.closeMenu();
+
+  switch (action.label) {
+    case 'Start Learning':
+      this.router.navigate(['/learn', topicSlug]);
+      break;
+
+    case 'Practice Exercises':
+      this.router.navigate(['/practice', topicSlug]);
+      break;
+
+    case 'Take a Quiz':
+      this.router.navigate(['/quiz', topicSlug]);
+      break;
+
+    case 'Interview Questions':
+      this.router.navigate(['/interview', topicSlug]);
+      break;
+
+    default:
+      console.log(`${action.label} clicked for ${this.activeItem.label}`);
+      break;
+  }
+}
 
   goToPath(label: string): void {
     const item = this.learningPath.find(path => path.label === label);
