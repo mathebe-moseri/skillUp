@@ -45,13 +45,13 @@ export const Learning_Path_Actions: navItem[] = [
   icon: '💼',
   description: 'Prepare for interviews with topic-based questions'
 },
-  {
-    label: 'Track Progress',
-    hasPreview: true,
-    locked: true,
-    icon: '📊',
-    description: 'Monitor your learning journey and achievements'
-  },
+{
+  label: 'Track Progress',
+  hasPreview: true,
+  locked: false,
+  icon: '📊',
+  description: 'Monitor your learning journey and achievements'
+},
   {
     label: 'Weekly Challenge',
     hasPreview: true,

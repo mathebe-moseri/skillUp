@@ -1,1 +1,163 @@
-<p>progress works!</p>
+<section class="progress-container" *ngIf="summary() as summaryData">
+  <div class="progress-hero">
+    <div class="progress-heading">
+      <span class="progress-badge">Track Progress</span>
+      <h2>{{ topic() | titlecase }} Progress Dashboard</h2>
+      <p>
+        See your learning activity, completion rate, quiz performance,
+        interview practice, and coding progress in one clean view.
+      </p>
+    </div>
+
+    <div class="progress-overview-card">
+      <p class="overview-label">Overall completion</p>
+      <h3>{{ summaryData.overallCompletion }}%</h3>
+      <p class="overview-message">
+        {{ getPerformanceMessage(summaryData.overallCompletion) }}
+      </p>
+
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          [style.width.%]="summaryData.overallCompletion"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <div class="stat-icon">🎥</div>
+      <div>
+        <p class="stat-label">Videos Watched</p>
+        <h3>{{ summaryData.videosWatched }}/{{ summaryData.totalVideos }}</h3>
+        <p class="stat-note">Lesson videos completed</p>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon">❓</div>
+      <div>
+        <p class="stat-label">Quizzes Completed</p>
+        <h3>{{ summaryData.quizzesCompleted }}/{{ summaryData.totalQuizzes }}</h3>
+        <p class="stat-note">Average score: {{ summaryData.averageQuizScore }}%</p>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon">💼</div>
+      <div>
+        <p class="stat-label">Interview Questions</p>
+        <h3>{{ summaryData.interviewQuestionsCompleted }}/{{ summaryData.totalInterviewQuestions }}</h3>
+        <p class="stat-note">Interview answers completed</p>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon">📝</div>
+      <div>
+        <p class="stat-label">Practice Exercises</p>
+        <h3>{{ summaryData.practicesCompleted }}/{{ summaryData.totalPractices }}</h3>
+        <p class="stat-note">Average score: {{ summaryData.averagePracticeScore }}%</p>
+      </div>
+    </article>
+  </div>
+
+  <div class="dashboard-grid" *ngIf="progress() as detail">
+    <section class="dashboard-card">
+      <div class="card-header">
+        <div>
+          <p class="card-kicker">Learning</p>
+          <h3>Video Progress</h3>
+        </div>
+      </div>
+
+      <div class="card-list">
+        <article class="list-row" *ngFor="let video of detail.videos">
+          <div class="list-copy">
+            <p class="list-title">{{ video.title }}</p>
+            <p class="list-subtitle">
+              {{ video.watchedSeconds }} / {{ video.totalSeconds }} sec watched
+            </p>
+          </div>
+
+          <span class="status-pill" [class.done]="video.watched">
+            {{ video.watched ? 'Completed' : 'In Progress' }}
+          </span>
+        </article>
+      </div>
+    </section>
+
+    <section class="dashboard-card">
+      <div class="card-header">
+        <div>
+          <p class="card-kicker">Assessment</p>
+          <h3>Quiz Results</h3>
+        </div>
+      </div>
+
+      <div class="card-list">
+        <article class="list-row" *ngFor="let quiz of detail.quizzes">
+          <div class="list-copy">
+            <p class="list-title">{{ quiz.title }}</p>
+            <p class="list-subtitle">
+              {{ quiz.score }}% • {{ quiz.totalQuestions }} questions
+            </p>
+          </div>
+
+          <span class="status-pill" [class.done]="quiz.completed">
+            {{ quiz.completed ? 'Completed' : 'Pending' }}
+          </span>
+        </article>
+      </div>
+    </section>
+
+    <section class="dashboard-card">
+      <div class="card-header">
+        <div>
+          <p class="card-kicker">Interview Prep</p>
+          <h3>Interview Practice</h3>
+        </div>
+      </div>
+
+      <div class="card-list">
+        <article class="list-row" *ngFor="let item of detail.interviews">
+          <div class="list-copy">
+            <p class="list-title">{{ item.question }}</p>
+            <p class="list-subtitle">
+              {{ item.answerGiven ? 'Answer submitted' : 'No answer submitted yet' }}
+            </p>
+          </div>
+
+          <span class="status-pill" [class.done]="item.completed">
+            {{ item.completed ? 'Completed' : 'Pending' }}
+          </span>
+        </article>
+      </div>
+    </section>
+
+    <section class="dashboard-card">
+      <div class="card-header">
+        <div>
+          <p class="card-kicker">Coding Practice</p>
+          <h3>Practice Responses</h3>
+        </div>
+      </div>
+
+      <div class="card-list">
+        <article class="list-row" *ngFor="let practice of detail.practices">
+          <div class="list-copy">
+            <p class="list-title">{{ practice.title }}</p>
+            <p class="list-subtitle">
+              {{ practice.feedback ? practice.feedback : 'No feedback yet' }}
+            </p>
+          </div>
+
+          <span class="status-pill" [class.done]="practice.completed">
+            {{ practice.completed ? 'Completed' : 'Pending' }}
+          </span>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>

@@ -178,7 +178,7 @@ getPreviewDescription(): string {
       : 'border-slate-200 bg-white hover:border-sky-200 hover:bg-sky-50/70 hover:shadow-[0_12px_28px_rgba(15,23,42,0.06)]';
   }
 
- onActionClick(action: navItem): void {
+onActionClick(action: navItem): void {
   if (!this.activeItem || !this.activeItem.hasPreview || this.activeItem.status !== 'available') {
     return;
   }
@@ -206,6 +206,10 @@ getPreviewDescription(): string {
 
     case 'Interview Questions':
       this.router.navigate(['/interview', topicSlug]);
+      break;
+
+    case 'Track Progress':
+      this.router.navigate(['/progress', topicSlug]);
       break;
 
     default:

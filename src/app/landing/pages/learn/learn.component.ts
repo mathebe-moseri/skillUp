@@ -5,11 +5,14 @@ import { Router } from '@angular/router';
 import { NavComponent } from '../../components/nav/nav.component';
 import { UiStateService } from '../../../shared/state/ui-state.service';
 import { PracticeComponent } from '../practice/practice.component';
+import { QuizComponent } from "../quiz/quiz.component";
+import { InterviewComponent } from "../interview/interview.component";
+import { ProgressComponent } from "../progress/progress.component";
 
 @Component({
   selector: 'app-learn',
   standalone: true,
-  imports: [FormsModule, CommonModule, NavComponent, PracticeComponent],
+  imports: [FormsModule, CommonModule, NavComponent, PracticeComponent, QuizComponent, InterviewComponent, ProgressComponent],
   templateUrl: './learn.component.html',
 })
 export class LearnComponent {

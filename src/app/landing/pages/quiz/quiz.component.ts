@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ProgressService } from '../../../shared/services/progress.service';
 
 interface QuizOption {
   text: string;
@@ -20,7 +22,15 @@ interface QuizQuestion {
   styleUrls: ['./quiz.component.css']
 })
 export class QuizComponent {
-  questions: QuizQuestion[] = [
+  private readonly progressService = inject(ProgressService);
+  private readonly route = inject(ActivatedRoute);
+
+  topic = 'angular';
+
+  quizId = 'angular-input-quiz';
+  quizTitle = '@Input() Decorator Quiz';
+
+ questions: QuizQuestion[] = [
     {
       question: '1. What is the main purpose of the @Input() decorator in Angular?',
       options: [
@@ -289,6 +299,10 @@ export class QuizComponent {
   showExplanation = false;
 
   constructor() {
+    this.route.paramMap.subscribe(params => {
+      this.topic = params.get('topic') ?? 'angular';
+    });
+
     this.initializeAnswers();
   }
 
@@ -328,8 +342,18 @@ export class QuizComponent {
     if (!this.allQuestionsAnswered()) {
       return;
     }
+
     this.submitted = true;
     this.showExplanation = true;
+
+    this.progressService.markQuizProgress(this.topic, {
+      id: this.quizId,
+      title: this.quizTitle,
+      completed: true,
+      score: this.getScorePercentage(),
+      totalQuestions: this.questions.length,
+      completedAt: new Date().toISOString()
+    });
   }
 
   finishOrNext(): void {
