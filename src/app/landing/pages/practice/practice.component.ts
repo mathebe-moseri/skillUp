@@ -208,39 +208,39 @@ export class PracticeComponent implements AfterViewInit {
 
     const sdk = (await import('@stackblitz/sdk')).default;
 
-    await sdk.embedProject(
-      this.editorHost.nativeElement,
-      {
-        title: 'Angular Input Practice',
-        description: 'Angular editor setup',
-        template: 'node',
-        files: {
-          'package.json': PACKAGE_JSON,
-          'angular.json': ANGULAR_JSON,
-          'tsconfig.json': TSCONFIG_JSON,
-          'tsconfig.app.json': TSCONFIG_APP_JSON,
-          '.postcssrc.json': POSTCSS_CONFIG,
-          'src/index.html': INDEX_HTML,
-          'src/main.ts': MAIN_TS,
-          'src/styles.css': STYLES_CSS,
-          'src/app/app.component.ts': APP_COMPONENT_TS,
-          'src/app/app.component.html': APP_COMPONENT_HTML,
-          'src/app/parent.component.ts': PARENT_COMPONENT_TS,
-          'src/app/parent.component.html': PARENT_COMPONENT_HTML,
-          'src/app/child.component.ts': CHILD_COMPONENT_TS,
-          'src/app/child.component.html': CHILD_COMPONENT_HTML,
-        },
-      },
-      {
-        openFile:
-          'src/app/app.component.ts,src/app/app.component.html,src/app/parent.component.ts,src/app/parent.component.html,src/app/child.component.ts,src/app/child.component.html',
-        view: 'default',
-        height: 700,
-        clickToLoad: false,
-        terminalHeight: 35,
-        showSidebar: true,
-        hideNavigation: false,
-      }
-    );
+    // await sdk.embedProject(
+    //   this.editorHost.nativeElement,
+    //   {
+    //     title: 'Angular Input Practice',
+    //     description: 'Angular editor setup',
+    //     template: 'node',
+    //     files: {
+    //       'package.json': PACKAGE_JSON,
+    //       'angular.json': ANGULAR_JSON,
+    //       'tsconfig.json': TSCONFIG_JSON,
+    //       'tsconfig.app.json': TSCONFIG_APP_JSON,
+    //       '.postcssrc.json': POSTCSS_CONFIG,
+    //       'src/index.html': INDEX_HTML,
+    //       'src/main.ts': MAIN_TS,
+    //       'src/styles.css': STYLES_CSS,
+    //       'src/app/app.component.ts': APP_COMPONENT_TS,
+    //       'src/app/app.component.html': APP_COMPONENT_HTML,
+    //       'src/app/parent.component.ts': PARENT_COMPONENT_TS,
+    //       'src/app/parent.component.html': PARENT_COMPONENT_HTML,
+    //       'src/app/child.component.ts': CHILD_COMPONENT_TS,
+    //       'src/app/child.component.html': CHILD_COMPONENT_HTML,
+    //     },
+    //   },
+    //   {
+    //     openFile:
+    //       'src/app/app.component.ts,src/app/app.component.html,src/app/parent.component.ts,src/app/parent.component.html,src/app/child.component.ts,src/app/child.component.html',
+    //     view: 'default',
+    //     height: 700,
+    //     clickToLoad: false,
+    //     terminalHeight: 35,
+    //     showSidebar: true,
+    //     hideNavigation: false,
+    //   }
+    // );
   }
 }
