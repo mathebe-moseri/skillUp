@@ -131,166 +131,166 @@ export class QuizComponent {
       ],
       explanation: '@Input() is fundamentally about communication and component design.'
     },
-    {
-      question: '11. If a child component needs to display dynamic data from different parents, what Angular feature makes this possible?',
-      options: [
-        { text: 'Services', correct: false },
-        { text: 'Routing', correct: false },
-        { text: '@Input()', correct: true },
-        { text: 'Pipes', correct: false }
-      ],
-      explanation: '@Input() allows a child component to receive different values from different parent components.'
-    },
-    {
-      question: '12. What happens if the parent updates a primitive value passed via @Input()?',
-      options: [
-        { text: 'Child automatically receives the updated value', correct: true },
-        { text: 'Child keeps the old value forever', correct: false },
-        { text: 'Angular throws an error', correct: false },
-        { text: 'The page reloads', correct: false }
-      ],
-      explanation: 'When the parent updates a primitive input value, Angular passes the new value to the child.'
-    },
-    {
-      question: '13. Why is @Input() considered part of component communication?',
-      options: [
-        { text: 'Because it allows components to share templates', correct: false },
-        { text: 'Because it allows parent-to-child data flow', correct: true },
-        { text: 'Because it allows routing navigation', correct: false },
-        { text: 'Because it manages global state', correct: false }
-      ],
-      explanation: '@Input() is one of Angular’s core tools for component communication.'
-    },
-    {
-      question: '14. You hardcode a value inside the child component instead of using @Input(). What is the main downside?',
-      options: [
-        { text: 'The component becomes harder to reuse', correct: true },
-        { text: 'The app will not compile', correct: false },
-        { text: 'Angular blocks rendering', correct: false },
-        { text: 'The router breaks', correct: false }
-      ],
-      explanation: 'Hardcoding values reduces flexibility and makes the component less reusable.'
-    },
-    {
-      question: '15. Two parent components use the same child component but need different data. What is the best design approach?',
-      options: [
-        { text: 'Duplicate the child component', correct: false },
-        { text: 'Use @Input() to pass different values', correct: true },
-        { text: 'Create a global variable', correct: false },
-        { text: 'Use an HTTP request', correct: false }
-      ],
-      explanation: '@Input() lets one reusable child component behave differently based on parent-provided values.'
-    },
-    {
-      question: '16. If a child component modifies an object received via @Input(), what architectural risk exists?',
-      options: [
-        { text: 'The parent UI may unexpectedly change', correct: true },
-        { text: 'Angular deletes the object', correct: false },
-        { text: 'A memory leak occurs', correct: false },
-        { text: 'Routing resets', correct: false }
-      ],
-      explanation: 'Objects are passed by reference, so changing them in the child can affect the parent unexpectedly.'
-    },
-    {
-      question: '17. Parent template: <app-user-card [userData]="user"></app-user-card>. Child component: @Input() user; UI shows nothing. What is the most likely problem?',
-      options: [
-        { text: 'Property name mismatch', correct: true },
-        { text: 'Angular version is outdated', correct: false },
-        { text: 'Selector is missing', correct: false },
-        { text: 'The component is standalone', correct: false }
-      ],
-      explanation: 'The parent is binding to userData, but the child input is named user. The names must match unless an alias is used.'
-    },
-    {
-      question: '18. Parent passes data but Angular shows: "Can\'t bind to \'product\' since it isn\'t a known property". What is most likely missing?',
-      options: [
-        { text: '@Output()', correct: false },
-        { text: '@Input() decorator in the child', correct: true },
-        { text: 'RouterModule', correct: false },
-        { text: 'HttpClient', correct: false }
-      ],
-      explanation: 'Angular must know that the child component property is an input by using @Input().'
-    },
-    {
-      question: '19. A child receives a value once but does not react when the parent changes it. Which lifecycle hook can help?',
-      options: [
-        { text: 'ngOnInit', correct: false },
-        { text: 'ngAfterViewInit', correct: false },
-        { text: 'ngOnChanges', correct: true },
-        { text: 'ngDestroy', correct: false }
-      ],
-      explanation: 'ngOnChanges helps respond to changes in input values over time.'
-    },
-    {
-      question: '20. Parent updates an object property like this.user.name = "John", but the child UI does not update with OnPush strategy. What is the best fix?',
-      options: [
-        { text: 'Reload the page', correct: false },
-        { text: 'Create a new object reference', correct: true },
-        { text: 'Add a service', correct: false },
-        { text: 'Remove the selector', correct: false }
-      ],
-      explanation: 'With OnPush, Angular often checks object references. Creating a new object reference helps Angular detect the change.'
-    },
-    {
-      question: '21. Why does Angular sometimes not detect changes when only object properties change?',
-      options: [
-        { text: 'Because Angular compares references, not deep values', correct: true },
-        { text: 'Because templates are cached', correct: false },
-        { text: 'Because inputs are async', correct: false },
-        { text: 'Because routing interrupts updates', correct: false }
-      ],
-      explanation: 'Angular change detection, especially with OnPush, often depends on reference changes rather than deep mutation checks.'
-    },
-    {
-      question: '22. When should you NOT use @Input()?',
-      options: [
-        { text: 'For sibling communication without parent involvement', correct: true },
-        { text: 'For reusable UI components', correct: false },
-        { text: 'For passing display data', correct: false },
-        { text: 'For configuration values', correct: false }
-      ],
-      explanation: '@Input() is for parent-to-child communication, not direct sibling-to-sibling communication.'
-    },
-    {
-      question: '23. What is the best way to send data from child to parent?',
-      options: [
-        { text: '@Input()', correct: false },
-        { text: '@Output() with EventEmitter', correct: true },
-        { text: 'Service injection', correct: false },
-        { text: 'Router navigate', correct: false }
-      ],
-      explanation: '@Output() is used for child-to-parent communication.'
-    },
-    {
-      question: '24. You write <app-card title="Hello"></app-card> and the child has @Input() title: string;. What concept should the learner understand here?',
-      options: [
-        { text: 'This is static attribute usage, while [title] is used for dynamic property binding', correct: true },
-        { text: 'Standalone components cannot use inputs', correct: false },
-        { text: 'Angular requires a service for string values', correct: false },
-        { text: 'The title input only works inside routing', correct: false }
-      ],
-      explanation: 'title="Hello" passes a static string. [title]="value" is used when the value should come from a component property.'
-    },
-    {
-      question: '25. A child input is declared as @Input({ required: true }) user!: User;. What happens if the parent does not provide it?',
-      options: [
-        { text: 'Angular can report an error because the required input was not provided', correct: true },
-        { text: 'The component automatically creates a user', correct: false },
-        { text: 'The page refreshes', correct: false },
-        { text: 'The router blocks navigation', correct: false }
-      ],
-      explanation: 'Required inputs help enforce that a parent must provide a value.'
-    },
-    {
-      question: '26. Why is component design with @Input() better than using global variables for UI data flow?',
-      options: [
-        { text: 'Because it creates clear data ownership and predictable flow', correct: true },
-        { text: 'Because it makes rendering faster in every case', correct: false },
-        { text: 'Because it reduces CSS automatically', correct: false },
-        { text: 'Because it improves routing by default', correct: false }
-      ],
-      explanation: '@Input() supports predictable, maintainable component communication with clear ownership of data.'
-    }
+    // {
+    //   question: '11. If a child component needs to display dynamic data from different parents, what Angular feature makes this possible?',
+    //   options: [
+    //     { text: 'Services', correct: false },
+    //     { text: 'Routing', correct: false },
+    //     { text: '@Input()', correct: true },
+    //     { text: 'Pipes', correct: false }
+    //   ],
+    //   explanation: '@Input() allows a child component to receive different values from different parent components.'
+    // },
+    // {
+    //   question: '12. What happens if the parent updates a primitive value passed via @Input()?',
+    //   options: [
+    //     { text: 'Child automatically receives the updated value', correct: true },
+    //     { text: 'Child keeps the old value forever', correct: false },
+    //     { text: 'Angular throws an error', correct: false },
+    //     { text: 'The page reloads', correct: false }
+    //   ],
+    //   explanation: 'When the parent updates a primitive input value, Angular passes the new value to the child.'
+    // },
+    // {
+    //   question: '13. Why is @Input() considered part of component communication?',
+    //   options: [
+    //     { text: 'Because it allows components to share templates', correct: false },
+    //     { text: 'Because it allows parent-to-child data flow', correct: true },
+    //     { text: 'Because it allows routing navigation', correct: false },
+    //     { text: 'Because it manages global state', correct: false }
+    //   ],
+    //   explanation: '@Input() is one of Angular’s core tools for component communication.'
+    // },
+    // {
+    //   question: '14. You hardcode a value inside the child component instead of using @Input(). What is the main downside?',
+    //   options: [
+    //     { text: 'The component becomes harder to reuse', correct: true },
+    //     { text: 'The app will not compile', correct: false },
+    //     { text: 'Angular blocks rendering', correct: false },
+    //     { text: 'The router breaks', correct: false }
+    //   ],
+    //   explanation: 'Hardcoding values reduces flexibility and makes the component less reusable.'
+    // },
+    // {
+    //   question: '15. Two parent components use the same child component but need different data. What is the best design approach?',
+    //   options: [
+    //     { text: 'Duplicate the child component', correct: false },
+    //     { text: 'Use @Input() to pass different values', correct: true },
+    //     { text: 'Create a global variable', correct: false },
+    //     { text: 'Use an HTTP request', correct: false }
+    //   ],
+    //   explanation: '@Input() lets one reusable child component behave differently based on parent-provided values.'
+    // },
+    // {
+    //   question: '16. If a child component modifies an object received via @Input(), what architectural risk exists?',
+    //   options: [
+    //     { text: 'The parent UI may unexpectedly change', correct: true },
+    //     { text: 'Angular deletes the object', correct: false },
+    //     { text: 'A memory leak occurs', correct: false },
+    //     { text: 'Routing resets', correct: false }
+    //   ],
+    //   explanation: 'Objects are passed by reference, so changing them in the child can affect the parent unexpectedly.'
+    // },
+    // {
+    //   question: '17. Parent template: <app-user-card [userData]="user"></app-user-card>. Child component: @Input() user; UI shows nothing. What is the most likely problem?',
+    //   options: [
+    //     { text: 'Property name mismatch', correct: true },
+    //     { text: 'Angular version is outdated', correct: false },
+    //     { text: 'Selector is missing', correct: false },
+    //     { text: 'The component is standalone', correct: false }
+    //   ],
+    //   explanation: 'The parent is binding to userData, but the child input is named user. The names must match unless an alias is used.'
+    // },
+    // {
+    //   question: '18. Parent passes data but Angular shows: "Can\'t bind to \'product\' since it isn\'t a known property". What is most likely missing?',
+    //   options: [
+    //     { text: '@Output()', correct: false },
+    //     { text: '@Input() decorator in the child', correct: true },
+    //     { text: 'RouterModule', correct: false },
+    //     { text: 'HttpClient', correct: false }
+    //   ],
+    //   explanation: 'Angular must know that the child component property is an input by using @Input().'
+    // },
+    // {
+    //   question: '19. A child receives a value once but does not react when the parent changes it. Which lifecycle hook can help?',
+    //   options: [
+    //     { text: 'ngOnInit', correct: false },
+    //     { text: 'ngAfterViewInit', correct: false },
+    //     { text: 'ngOnChanges', correct: true },
+    //     { text: 'ngDestroy', correct: false }
+    //   ],
+    //   explanation: 'ngOnChanges helps respond to changes in input values over time.'
+    // },
+    // {
+    //   question: '20. Parent updates an object property like this.user.name = "John", but the child UI does not update with OnPush strategy. What is the best fix?',
+    //   options: [
+    //     { text: 'Reload the page', correct: false },
+    //     { text: 'Create a new object reference', correct: true },
+    //     { text: 'Add a service', correct: false },
+    //     { text: 'Remove the selector', correct: false }
+    //   ],
+    //   explanation: 'With OnPush, Angular often checks object references. Creating a new object reference helps Angular detect the change.'
+    // },
+    // {
+    //   question: '21. Why does Angular sometimes not detect changes when only object properties change?',
+    //   options: [
+    //     { text: 'Because Angular compares references, not deep values', correct: true },
+    //     { text: 'Because templates are cached', correct: false },
+    //     { text: 'Because inputs are async', correct: false },
+    //     { text: 'Because routing interrupts updates', correct: false }
+    //   ],
+    //   explanation: 'Angular change detection, especially with OnPush, often depends on reference changes rather than deep mutation checks.'
+    // },
+    // {
+    //   question: '22. When should you NOT use @Input()?',
+    //   options: [
+    //     { text: 'For sibling communication without parent involvement', correct: true },
+    //     { text: 'For reusable UI components', correct: false },
+    //     { text: 'For passing display data', correct: false },
+    //     { text: 'For configuration values', correct: false }
+    //   ],
+    //   explanation: '@Input() is for parent-to-child communication, not direct sibling-to-sibling communication.'
+    // },
+    // {
+    //   question: '23. What is the best way to send data from child to parent?',
+    //   options: [
+    //     { text: '@Input()', correct: false },
+    //     { text: '@Output() with EventEmitter', correct: true },
+    //     { text: 'Service injection', correct: false },
+    //     { text: 'Router navigate', correct: false }
+    //   ],
+    //   explanation: '@Output() is used for child-to-parent communication.'
+    // },
+    // {
+    //   question: '24. You write <app-card title="Hello"></app-card> and the child has @Input() title: string;. What concept should the learner understand here?',
+    //   options: [
+    //     { text: 'This is static attribute usage, while [title] is used for dynamic property binding', correct: true },
+    //     { text: 'Standalone components cannot use inputs', correct: false },
+    //     { text: 'Angular requires a service for string values', correct: false },
+    //     { text: 'The title input only works inside routing', correct: false }
+    //   ],
+    //   explanation: 'title="Hello" passes a static string. [title]="value" is used when the value should come from a component property.'
+    // },
+    // {
+    //   question: '25. A child input is declared as @Input({ required: true }) user!: User;. What happens if the parent does not provide it?',
+    //   options: [
+    //     { text: 'Angular can report an error because the required input was not provided', correct: true },
+    //     { text: 'The component automatically creates a user', correct: false },
+    //     { text: 'The page refreshes', correct: false },
+    //     { text: 'The router blocks navigation', correct: false }
+    //   ],
+    //   explanation: 'Required inputs help enforce that a parent must provide a value.'
+    // },
+    // {
+    //   question: '26. Why is component design with @Input() better than using global variables for UI data flow?',
+    //   options: [
+    //     { text: 'Because it creates clear data ownership and predictable flow', correct: true },
+    //     { text: 'Because it makes rendering faster in every case', correct: false },
+    //     { text: 'Because it reduces CSS automatically', correct: false },
+    //     { text: 'Because it improves routing by default', correct: false }
+    //   ],
+    //   explanation: '@Input() supports predictable, maintainable component communication with clear ownership of data.'
+    // }
   ];
 
   selectedAnswers: number[] = [];
