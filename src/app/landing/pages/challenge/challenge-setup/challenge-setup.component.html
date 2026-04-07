@@ -1,0 +1,39 @@
+<div class="challenge-setup-page">
+  <div class="challenge-setup-card">
+    <div class="setup-badge">Weekly Challenge</div>
+
+    <h2>Choose your opponent</h2>
+    <p class="setup-subtitle">
+      Pick a player and decide how your name should appear in the challenge.
+    </p>
+
+    <div class="setup-section">
+      <label for="opponent">Select opponent</label>
+      <select id="opponent" [(ngModel)]="selectedUserId">
+        <option *ngFor="let user of users.slice(1)" [value]="user.id">
+          {{ user.realName }}
+        </option>
+      </select>
+    </div>
+
+    <div class="setup-section checkbox-card">
+      <label class="checkbox-row">
+        <input type="checkbox" [(ngModel)]="useAnonymous" />
+        <span>Compete anonymously</span>
+      </label>
+
+      <p class="helper-text">
+        Your opponent will see your display name instead of your real name.
+      </p>
+    </div>
+
+    <div class="preview-card">
+      <p class="preview-label">Your display name</p>
+      <h3>{{ useAnonymous ? 'CodeFox' : users[0].realName }}</h3>
+    </div>
+
+    <button type="button" class="continue-btn" (click)="startSetup()">
+      Continue to Lobby
+    </button>
+  </div>
+</div>

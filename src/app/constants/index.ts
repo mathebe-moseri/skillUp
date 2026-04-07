@@ -55,7 +55,7 @@ export const Learning_Path_Actions: navItem[] = [
   {
     label: 'Weekly Challenge',
     hasPreview: true,
-    locked: true,
+    locked: false,
     icon: '🗓️',
     description: 'Take on weekly tasks to sharpen your skills'
   },

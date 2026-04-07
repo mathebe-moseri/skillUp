@@ -1,0 +1,53 @@
+<div *ngIf="match as currentMatch" class="lobby-page">
+  <div class="lobby-card">
+    <div class="lobby-badge">Weekly Challenge</div>
+
+    <h2>Challenge Lobby</h2>
+    <p class="lobby-subtitle">
+      Both players must be ready before the challenge begins.
+    </p>
+
+    <div class="players">
+      <div
+        class="player-card"
+        *ngFor="let player of currentMatch.players"
+        [class.ready]="player?.isReady"
+      >
+        <div class="avatar-wrap">
+          <img [src]="player?.avatar" alt="avatar" />
+        </div>
+
+        <div class="player-info">
+          <h3>{{ player?.displayName }}</h3>
+          <p class="status" [class.status-ready]="player?.isReady">
+            {{ player?.isReady ? 'Ready' : 'Waiting...' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="currentMatch.status === 'waiting'" class="action-row">
+      <button
+        type="button"
+        class="primary-btn"
+        (click)="markReady(currentMatch.players[0].id)"
+      >
+        I'm Ready
+      </button>
+
+      <button
+        type="button"
+        class="secondary-btn"
+        (click)="markReady(currentMatch.players[1].id)"
+      >
+        Simulate Opponent Ready
+      </button>
+    </div>
+
+    <div *ngIf="currentMatch.status === 'countdown'" class="countdown-box">
+      <p class="countdown-label">Starting in</p>
+      <h1>{{ countdown }}</h1>
+      <p class="countdown-text">Challenge starts now...</p>
+    </div>
+  </div>
+</div>

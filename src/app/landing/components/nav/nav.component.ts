@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    ContainerComponent,
+
     ButtonComponent,
     DropdownComponent,
     RouterLink
@@ -211,6 +211,10 @@ onActionClick(action: navItem): void {
     case 'Track Progress':
       this.router.navigate(['/progress', topicSlug]);
       break;
+
+case 'Weekly Challenge':
+  this.router.navigate(['/challenge/setup']);
+  break;
 
     default:
       console.log(`${action.label} clicked for ${this.activeItem.label}`);

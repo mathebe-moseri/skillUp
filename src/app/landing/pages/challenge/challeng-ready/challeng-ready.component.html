@@ -1,0 +1,107 @@
+<div *ngIf="match as currentMatch" class="challenge-page">
+  <div class="challenge-shell">
+    <div class="top-bar">
+      <div>
+        <div class="screen-badge">Weekly Challenge</div>
+        <h2>Live Match</h2>
+      </div>
+
+      <div class="timer-card">
+        <span class="timer-label">Elapsed Time</span>
+        <strong class="timer-value">{{ elapsedSeconds }}s</strong>
+      </div>
+    </div>
+
+    <div class="versus-board">
+      <div class="player-card me">
+        <div class="player-head">
+          <div class="avatar-circle">
+            {{ currentMatch.players[0].displayName.charAt(0) }}
+          </div>
+          <div>
+            <p class="player-label">You</p>
+            <h3>{{ currentMatch.players[0].displayName }}</h3>
+          </div>
+        </div>
+
+        <div class="progress-meta">
+          <span>Progress</span>
+          <strong>{{ currentMatch.players[0].progress }}%</strong>
+        </div>
+
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            [style.width.%]="currentMatch.players[0].progress"
+          ></div>
+        </div>
+      </div>
+
+      <div class="vs-badge">VS</div>
+
+      <div class="player-card opponent" *ngIf="currentMatch.players[1] as opponent">
+        <div class="player-head">
+          <div class="avatar-circle opponent-avatar">
+            {{ opponent.displayName.charAt(0) }}
+          </div>
+          <div>
+            <p class="player-label">Opponent</p>
+            <h3>{{ opponent.displayName }}</h3>
+          </div>
+        </div>
+
+        <div class="progress-meta">
+          <span>Progress</span>
+          <strong>{{ opponent.progress }}%</strong>
+        </div>
+
+        <div class="progress-track">
+          <div
+            class="progress-fill opponent-fill"
+            [style.width.%]="opponent.progress"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-grid">
+      <div class="control-card">
+        <h4>Your Actions</h4>
+        <p>Update your progress or finish the challenge.</p>
+
+        <div class="button-row">
+          <button type="button" class="ghost-btn" (click)="updateMyProgress(25)">25%</button>
+          <button type="button" class="ghost-btn" (click)="updateMyProgress(50)">50%</button>
+          <button type="button" class="ghost-btn" (click)="updateMyProgress(75)">75%</button>
+          <button type="button" class="primary-btn" (click)="completeChallenge()">Finish</button>
+        </div>
+      </div>
+
+      <div class="control-card">
+        <h4>Demo Opponent</h4>
+        <p>Use these buttons to simulate the other player for now.</p>
+
+        <div class="button-row">
+          <button type="button" class="ghost-btn" (click)="simulateOpponentProgress(40)">
+            Sim Opponent 40%
+          </button>
+          <button type="button" class="secondary-btn" (click)="simulateOpponentFinish()">
+            Sim Opponent Finish
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="currentMatch.status === 'finished'" class="result-box">
+      <p class="result-label">Match Result</p>
+      <h3>
+        Winner:
+        {{
+          currentMatch.players[0].id === currentMatch.winnerId
+            ? currentMatch.players[0].displayName
+            : currentMatch.players[1].displayName
+        }}
+      </h3>
+    </div>
+  </div>
+</div>

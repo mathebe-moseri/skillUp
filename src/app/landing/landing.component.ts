@@ -5,6 +5,7 @@ import { HeroComponent } from './components/hero/hero.component';
 import { CtaComponent } from './components/cta/cta.component';
 import { ContainerComponent } from '../shared/ui/container/container.component';
 import { UiStateService } from '../shared/state/ui-state.service';
+import { ChallengeComponent } from "./pages/challenge/challenge.component";
 
 
 @Component({
@@ -12,7 +13,7 @@ import { UiStateService } from '../shared/state/ui-state.service';
   standalone: true,
   imports: [
     CommonModule,
-    NavComponent,
+
     HeroComponent,
     CtaComponent,
     ContainerComponent,
