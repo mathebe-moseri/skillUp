@@ -1,22 +1,34 @@
-// src/app/models/challenge.model.ts
+import { ChallengeTask } from '../constants/challenge-tasks';
 
 export interface ChallengePlayer {
   id: string;
   realName: string;
   displayName: string;
   anonymous: boolean;
-  avatar?: string;
+  avatar: string;
+
   isReady: boolean;
   progress: number;
   completed: boolean;
-  completionTime?: number; // seconds
+  score: number;
+
+  files?: Record<string, string>;
+  activeFile?: string;
+
+  completionTime?: number;
 }
+
 
 export interface WeeklyChallengeMatch {
   id: string;
+
   status: 'setup' | 'waiting' | 'countdown' | 'live' | 'finished';
-  players: [ChallengePlayer, ChallengePlayer]; // ✅ FIXED
+
+  players: [ChallengePlayer, ChallengePlayer];
+
+  duration: number;
+  task: ChallengeTask;
+
   startedAt?: number;
-  duration: number; // seconds
   winnerId?: string;
 }

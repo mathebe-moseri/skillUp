@@ -2,38 +2,91 @@
   <div class="challenge-setup-card">
     <div class="setup-badge">Weekly Challenge</div>
 
-    <h2>Choose your opponent</h2>
-    <p class="setup-subtitle">
-      Pick a player and decide how your name should appear in the challenge.
-    </p>
-
-    <div class="setup-section">
-      <label for="opponent">Select opponent</label>
-      <select id="opponent" [(ngModel)]="selectedUserId">
-        <option *ngFor="let user of users.slice(1)" [value]="user.id">
-          {{ user.realName }}
-        </option>
-      </select>
+    <div class="mode-toggle">
+      <button
+        type="button"
+        [class.active]="mode === 'create'"
+        (click)="mode = 'create'"
+      >
+        Create Match
+      </button>
+      <button
+        type="button"
+        [class.active]="mode === 'join'"
+        (click)="mode = 'join'"
+      >
+        Join Match
+      </button>
     </div>
 
-    <div class="setup-section checkbox-card">
-      <label class="checkbox-row">
-        <input type="checkbox" [(ngModel)]="useAnonymous" />
-        <span>Compete anonymously</span>
-      </label>
-
-      <p class="helper-text">
-        Your opponent will see your display name instead of your real name.
+    <ng-container *ngIf="mode === 'create'">
+      <h2>Choose your opponent</h2>
+      <p class="setup-subtitle">
+        Pick a player and decide how your name should appear in the challenge.
       </p>
-    </div>
 
-    <div class="preview-card">
-      <p class="preview-label">Your display name</p>
-      <h3>{{ useAnonymous ? 'CodeFox' : users[0].realName }}</h3>
-    </div>
+      <div class="setup-section">
+        <label for="opponent">Select opponent</label>
+        <select id="opponent" [(ngModel)]="selectedUserId">
+          <option *ngFor="let user of users.slice(1)" [value]="user.id">
+            {{ user.realName }}
+          </option>
+        </select>
+      </div>
 
-    <button type="button" class="continue-btn" (click)="startSetup()">
-      Continue to Lobby
-    </button>
+      <div class="setup-section">
+        <label for="task">Select challenge</label>
+        <select id="task" [(ngModel)]="selectedTaskId">
+          <option *ngFor="let task of tasks" [value]="task.id">
+            {{ task.title }}
+          </option>
+        </select>
+      </div>
+
+      <div class="setup-section checkbox-card">
+        <label class="checkbox-row">
+          <input type="checkbox" [(ngModel)]="useAnonymous" />
+          <span>Compete anonymously</span>
+        </label>
+
+        <p class="helper-text">
+          Your opponent will see your display name instead of your real name.
+        </p>
+      </div>
+
+      <div class="preview-card">
+        <p class="preview-label">Your display name</p>
+        <h3>{{ useAnonymous ? 'CodeFox' : users[0].realName }}</h3>
+      </div>
+
+      <button type="button" class="continue-btn" (click)="startSetup()">
+        Continue to Lobby
+      </button>
+    </ng-container>
+
+    <ng-container *ngIf="mode === 'join'">
+      <h2>Join an existing match</h2>
+      <p class="setup-subtitle">
+        Enter the match code from the first device and choose who you are.
+      </p>
+
+      <div class="setup-section">
+        <label for="matchCode">Match code</label>
+        <input id="matchCode" type="text" [(ngModel)]="joinMatchId" />
+      </div>
+
+      <div class="setup-section">
+        <label for="joinUser">Join as</label>
+        <select id="joinUser" [(ngModel)]="joiningAsUserId">
+          <option *ngFor="let user of users" [value]="user.id">
+            {{ user.realName }}
+          </option>
+        </select>
+      </div>
+
+      <button type="button" class="continue-btn" (click)="joinMatch()">
+        Join Lobby
+      </button>
+    </ng-container>
   </div>
 </div>

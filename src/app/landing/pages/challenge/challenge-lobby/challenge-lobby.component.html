@@ -7,20 +7,43 @@
       Both players must be ready before the challenge begins.
     </p>
 
+    <div class="match-code-box">
+      <p class="match-code-label">Match Code</p>
+      <h3>{{ currentMatch.id }}</h3>
+      <p class="match-code-help">
+        Share this code with the second player so they can join on another device.
+      </p>
+    </div>
+
+    <div class="challenge-preview">
+      <p class="challenge-label">Selected Challenge</p>
+      <h3>{{ currentMatch.task.title }}</h3>
+      <p class="challenge-description">
+        {{ currentMatch.task.description }}
+      </p>
+      <p class="challenge-duration">
+        Time Limit: {{ currentMatch.duration }} seconds
+      </p>
+    </div>
+
     <div class="players">
       <div
         class="player-card"
         *ngFor="let player of currentMatch.players"
-        [class.ready]="player?.isReady"
+        [class.ready]="player.isReady"
+        [class.me]="player.id === currentUserId"
       >
         <div class="avatar-wrap">
-          <img [src]="player?.avatar" alt="avatar" />
+          <img [src]="player.avatar" alt="avatar" />
         </div>
 
         <div class="player-info">
-          <h3>{{ player?.displayName }}</h3>
-          <p class="status" [class.status-ready]="player?.isReady">
-            {{ player?.isReady ? 'Ready' : 'Waiting...' }}
+          <h3>
+            {{ player.displayName }}
+            <span *ngIf="player.id === currentUserId" class="me-badge">You</span>
+          </h3>
+          <p class="status" [class.status-ready]="player.isReady">
+            {{ player.isReady ? 'Ready' : 'Waiting...' }}
           </p>
         </div>
       </div>
@@ -30,17 +53,10 @@
       <button
         type="button"
         class="primary-btn"
-        (click)="markReady(currentMatch.players[0].id)"
+        (click)="markReady()"
+        [disabled]="!myPlayer || myPlayer.isReady"
       >
-        I'm Ready
-      </button>
-
-      <button
-        type="button"
-        class="secondary-btn"
-        (click)="markReady(currentMatch.players[1].id)"
-      >
-        Simulate Opponent Ready
+        {{ myPlayer?.isReady ? 'Ready' : "I'm Ready" }}
       </button>
     </div>
 
