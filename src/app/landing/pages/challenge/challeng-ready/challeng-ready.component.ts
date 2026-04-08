@@ -72,13 +72,25 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     const matchId = localStorage.getItem('matchId');
-    if (matchId) {
-      this.socketService.emit('join_match', { matchId });
+    if (matchId && this.currentUserId) {
+      this.socketService.emit('join_match', {
+        matchId,
+        userId: this.currentUserId
+      });
     }
   }
 
   async ngAfterViewInit(): Promise<void> {
     if (!isPlatformBrowser(this.platformId) || !this.editorHost) return;
+
+    (window as any).MonacoEnvironment = {
+      getWorkerUrl: function () {
+        return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+          self.MonacoEnvironment = { baseUrl: '/assets/monaco/' };
+          importScripts('/assets/monaco/vs/base/worker/workerMain.js');
+        `)}`;
+      }
+    };
 
     const monaco = await import('monaco-editor');
     this.monaco = monaco;

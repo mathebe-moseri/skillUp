@@ -78,12 +78,17 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+"assets": [
+  {
+    "glob": "**/*",
+    "input": "public"
+  },
+  {
+    "glob": "**/*",
+    "input": "node_modules/monaco-editor/min/vs",
+    "output": "assets/monaco"
+  }
+],
             "styles": [
               "src/styles.css"
             ],
