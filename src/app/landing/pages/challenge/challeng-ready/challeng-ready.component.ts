@@ -29,7 +29,11 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private sub?: Subscription;
   private timerSub?: Subscription;
-  private matchUpdatedSub?: Subscription;
+  private eventsSub?: Subscription;
+  private updateCodeSub?: Subscription;
+  private runCodeSub?: Subscription;
+  private submitCodeSub?: Subscription;
+  private activeFileSub?: Subscription;
   private monaco: typeof import('monaco-editor') | null = null;
   private editor: import('monaco-editor').editor.IStandaloneCodeEditor | null = null;
   private isUpdatingEditor = false;
@@ -41,7 +45,7 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
   ) {}
 
   ngOnInit(): void {
-    this.sub = this.challengeService.match$.subscribe(match => {
+    this.sub = this.challengeService.match$.subscribe((match) => {
       this.match = match;
 
       if (this.editor && this.activeFileContent !== this.editor.getValue()) {
@@ -59,38 +63,54 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     });
 
-    this.matchUpdatedSub = this.socketService
-      .on<WeeklyChallengeMatch>('match_updated')
-      .subscribe((match) => {
-        this.challengeService.setMatch(match);
+    const matchId = localStorage.getItem('matchId');
+    const userId = localStorage.getItem('userId');
+
+    if (matchId) {
+      this.eventsSub = this.socketService
+        .connectToMatchEvents(matchId)
+        .subscribe({
+          next: ({ event, data }) => {
+            if (event === 'match_updated') {
+              this.challengeService.setMatch(data as WeeklyChallengeMatch);
+            }
+
+            if (event === 'match_started') {
+              this.challengeService.setMatch(data as WeeklyChallengeMatch);
+              this.elapsedSeconds = 0;
+            }
+
+            if (event === 'match_finished') {
+              const payload = data as { reason?: string; match: WeeklyChallengeMatch };
+              this.challengeService.setMatch(payload.match);
+            }
+          },
+          error: (error) => {
+            console.error('Match events error:', error);
+          }
+        });
+    }
+
+    if (matchId && userId) {
+      this.socketService.joinMatch(matchId, userId).subscribe({
+        next: ({ match }) => {
+          this.challengeService.setMatch(match);
+        },
+        error: (error) => {
+          console.error('Join match failed:', error);
+        }
       });
+    }
 
     this.timerSub = interval(1000).subscribe(() => {
       if (this.match?.status === 'live') {
         this.elapsedSeconds++;
       }
     });
-
-    const matchId = localStorage.getItem('matchId');
-    if (matchId && this.currentUserId) {
-      this.socketService.emit('join_match', {
-        matchId,
-        userId: this.currentUserId
-      });
-    }
   }
 
   async ngAfterViewInit(): Promise<void> {
     if (!isPlatformBrowser(this.platformId) || !this.editorHost) return;
-
-    (window as any).MonacoEnvironment = {
-      getWorkerUrl: function () {
-        return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
-          self.MonacoEnvironment = { baseUrl: '/assets/monaco/' };
-          importScripts('/assets/monaco/vs/base/worker/workerMain.js');
-        `)}`;
-      }
-    };
 
     const monaco = await import('monaco-editor');
     this.monaco = monaco;
@@ -140,54 +160,75 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
     return this.me.files[this.me.activeFile] ?? '';
   }
 
-  selectFile(fileName: string) {
+  selectFile(fileName: string): void {
     const matchId = localStorage.getItem('matchId');
     const userId = this.me?.id;
     if (!matchId || !userId) return;
 
-    this.socketService.emit('set_active_file', {
-      matchId,
-      userId,
-      fileName
-    });
+    this.activeFileSub?.unsubscribe();
+    this.activeFileSub = this.socketService
+      .setActiveFile(matchId, userId, fileName)
+      .subscribe({
+        error: (error) => {
+          console.error('Set active file failed:', error);
+        }
+      });
   }
 
-  updateCode(content: string) {
+  updateCode(content: string): void {
     const matchId = localStorage.getItem('matchId');
     const userId = this.me?.id;
     const fileName = this.me?.activeFile;
 
     if (!matchId || !userId || !fileName) return;
 
-    this.socketService.emit('update_code', {
-      matchId,
-      userId,
-      fileName,
-      content
-    });
+    this.updateCodeSub?.unsubscribe();
+    this.updateCodeSub = this.socketService
+      .updateCode(matchId, userId, fileName, content)
+      .subscribe({
+        next: ({ match }) => {
+          this.challengeService.setMatch(match);
+        },
+        error: (error) => {
+          console.error('Update code failed:', error);
+        }
+      });
   }
 
-  runCode() {
+  runCode(): void {
     const matchId = localStorage.getItem('matchId');
     const userId = this.me?.id;
     if (!matchId || !userId) return;
 
-    this.socketService.emit('run_code', {
-      matchId,
-      userId
-    });
+    this.runCodeSub?.unsubscribe();
+    this.runCodeSub = this.socketService
+      .runCode(matchId, userId)
+      .subscribe({
+        next: ({ match }) => {
+          this.challengeService.setMatch(match);
+        },
+        error: (error) => {
+          console.error('Run code failed:', error);
+        }
+      });
   }
 
-  submitCode() {
+  submitCode(): void {
     const matchId = localStorage.getItem('matchId');
     const userId = this.me?.id;
     if (!matchId || !userId) return;
 
-    this.socketService.emit('submit_code', {
-      matchId,
-      userId,
-      elapsedSeconds: this.elapsedSeconds
-    });
+    this.submitCodeSub?.unsubscribe();
+    this.submitCodeSub = this.socketService
+      .submitCode(matchId, userId, this.elapsedSeconds)
+      .subscribe({
+        next: ({ match }) => {
+          this.challengeService.setMatch(match);
+        },
+        error: (error) => {
+          console.error('Submit code failed:', error);
+        }
+      });
   }
 
   private getLanguageFromFile(fileName: string): string {
@@ -201,7 +242,11 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.timerSub?.unsubscribe();
-    this.matchUpdatedSub?.unsubscribe();
+    this.eventsSub?.unsubscribe();
+    this.updateCodeSub?.unsubscribe();
+    this.runCodeSub?.unsubscribe();
+    this.submitCodeSub?.unsubscribe();
+    this.activeFileSub?.unsubscribe();
     this.editor?.dispose();
   }
 }

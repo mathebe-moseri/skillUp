@@ -1,67 +1,111 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { io, Socket } from 'socket.io-client';
+import { WeeklyChallengeMatch } from '../models/challenge.model';
+
+type MatchEventPayload =
+  | WeeklyChallengeMatch
+  | { seconds: number; match: WeeklyChallengeMatch }
+  | { ok: true; matchId: string };
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
-  private socket: Socket;
+  private readonly baseUrl =
+    'https://server-su-e7aeh0gmfufna0bk.southafricanorth-01.azurewebsites.net';
 
-  constructor() {
-    this.socket = io('https://server-su-e7aeh0gmfufna0bk.southafricanorth-01.azurewebsites.net', {
-      transports: ['polling', 'websocket'],
-      upgrade: true,
-      withCredentials: false,
-      timeout: 20000,
-      reconnection: true,
-      reconnectionAttempts: 20,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      autoConnect: true
-    });
+  constructor(
+    private http: HttpClient,
+    private zone: NgZone
+  ) {}
 
-    this.socket.on('connect', () => {
-      console.log('[socket] connected:', this.socket.id);
-    });
-
-    this.socket.on('connect_error', (err: Error) => {
-      console.error('[socket] connect_error:', err.message, err);
-    });
-
-    this.socket.on('disconnect', (reason: string) => {
-      console.warn('[socket] disconnected:', reason);
-    });
-
-    this.socket.io.on('reconnect_attempt', (attempt: number) => {
-      console.log('[socket] reconnect_attempt:', attempt);
-    });
-
-    this.socket.io.on('reconnect', (attempt: number) => {
-      console.log('[socket] reconnected after:', attempt);
-    });
+  createMatch(player1: unknown, player2: unknown, task: unknown) {
+    return this.http.post<{ matchId: string; match: WeeklyChallengeMatch }>(
+      `${this.baseUrl}/matches/create`,
+      { player1, player2, task }
+    );
   }
 
-  emit(eventName: string, payload: unknown): void {
-    this.socket.emit(eventName, payload);
+  joinMatch(matchId: string, userId: string) {
+    return this.http.post<{ matchId: string; match: WeeklyChallengeMatch }>(
+      `${this.baseUrl}/matches/join`,
+      { matchId, userId }
+    );
   }
 
-  on<T>(eventName: string): Observable<T> {
-    return new Observable<T>((observer) => {
-      const handler = (data: T) => observer.next(data);
-      this.socket.on(eventName, handler);
+  playerReady(matchId: string, userId: string) {
+    return this.http.post<{ ok: true; match: WeeklyChallengeMatch }>(
+      `${this.baseUrl}/matches/ready`,
+      { matchId, userId }
+    );
+  }
 
-      return () => this.socket.off(eventName, handler);
+  setActiveFile(matchId: string, userId: string, fileName: string | null) {
+    return this.http.post<{ ok: true }>(
+      `${this.baseUrl}/matches/active-file`,
+      { matchId, userId, fileName }
+    );
+  }
+
+  updateCode(matchId: string, userId: string, fileName: string, content: string) {
+    return this.http.post<{ ok: true; match: WeeklyChallengeMatch }>(
+      `${this.baseUrl}/matches/update-code`,
+      { matchId, userId, fileName, content }
+    );
+  }
+
+  runCode(matchId: string, userId: string) {
+    return this.http.post<{ ok: true; match: WeeklyChallengeMatch }>(
+      `${this.baseUrl}/matches/run-code`,
+      { matchId, userId }
+    );
+  }
+
+  submitCode(matchId: string, userId: string, elapsedSeconds: number) {
+    return this.http.post<{ ok: true; match: WeeklyChallengeMatch }>(
+      `${this.baseUrl}/matches/submit-code`,
+      { matchId, userId, elapsedSeconds }
+    );
+  }
+
+  connectToMatchEvents(matchId: string): Observable<{
+    event: string;
+    data: MatchEventPayload;
+  }> {
+    return new Observable((observer) => {
+      const eventSource = new EventSource(`${this.baseUrl}/matches/${matchId}/events`);
+
+      const handle = (eventName: string) => (event: Event) => {
+        const messageEvent = event as MessageEvent;
+
+        this.zone.run(() => {
+          observer.next({
+            event: eventName,
+            data: JSON.parse(messageEvent.data) as MatchEventPayload
+          });
+        });
+      };
+
+      const onConnected = handle('connected');
+      const onUpdated = handle('match_updated');
+      const onStarted = handle('match_started');
+      const onFinished = handle('match_finished');
+      const onCountdown = handle('countdown_started');
+
+      eventSource.addEventListener('connected', onConnected as EventListener);
+      eventSource.addEventListener('match_updated', onUpdated as EventListener);
+      eventSource.addEventListener('match_started', onStarted as EventListener);
+      eventSource.addEventListener('match_finished', onFinished as EventListener);
+      eventSource.addEventListener('countdown_started', onCountdown as EventListener);
+
+      eventSource.onerror = (error) => {
+        this.zone.run(() => observer.error(error));
+      };
+
+      return () => {
+        eventSource.close();
+      };
     });
-  }
-
-  connect(): void {
-    if (!this.socket.connected) {
-      this.socket.connect();
-    }
-  }
-
-  disconnect(): void {
-    this.socket.disconnect();
   }
 }

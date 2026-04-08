@@ -30,37 +30,26 @@ export class ChallengeSetupComponent implements OnDestroy {
   joiningAsUserId = 'u2';
 
   private createdSub?: Subscription;
-  private updatedSub?: Subscription;
+  private joinedSub?: Subscription;
+  private eventsSub?: Subscription;
 
   constructor(
     private challengeService: ChallengeService,
     private router: Router,
     private socketService: SocketService
-  ) {
-    this.createdSub = this.socketService
-      .on<{ matchId: string; match: WeeklyChallengeMatch }>('match_created')
-      .subscribe(({ matchId, match }) => {
-        localStorage.setItem('matchId', matchId);
-        localStorage.setItem('userId', match.players[0].id);
-        this.challengeService.setMatch(match);
-        this.router.navigate(['/challenge/lobby']);
-      });
+  ) {}
 
-    this.updatedSub = this.socketService
-      .on<WeeklyChallengeMatch>('match_updated')
-      .subscribe((match) => {
-        this.challengeService.setMatch(match);
-      });
-  }
-
-  startSetup() {
+  startSetup(): void {
     const currentUser = this.users[0];
-    const opponent = this.users.find(user => user.id === this.selectedUserId)!;
-    const selectedTask = this.tasks.find(task => task.id === this.selectedTaskId)!;
+    const opponent = this.users.find(user => user.id === this.selectedUserId);
+    if (!opponent) return;
+
+    const selectedTask = this.tasks.find(task => task.id === this.selectedTaskId);
+    if (!selectedTask) return;
 
     const starterFiles = { ...selectedTask.starterFiles };
     const opponentFiles = { ...selectedTask.starterFiles };
-    const firstFile = Object.keys(selectedTask.starterFiles)[0];
+    const firstFile = Object.keys(selectedTask.starterFiles)[0] ?? '';
 
     const player1 = {
       id: currentUser.id,
@@ -90,28 +79,75 @@ export class ChallengeSetupComponent implements OnDestroy {
       activeFile: firstFile
     };
 
-    this.socketService.emit('create_match', {
-      task: selectedTask,
-      player1,
-      player2
-    });
+    this.createdSub?.unsubscribe();
+    this.createdSub = this.socketService
+      .createMatch(player1, player2, selectedTask)
+      .subscribe({
+        next: ({ matchId, match }) => {
+          localStorage.setItem('matchId', matchId);
+          localStorage.setItem('userId', match.players[0].id);
+
+          this.challengeService.setMatch(match);
+
+          this.eventsSub?.unsubscribe();
+          this.eventsSub = this.socketService
+            .connectToMatchEvents(matchId)
+            .subscribe({
+              next: ({ event, data }) => {
+                if (event === 'match_updated') {
+                  this.challengeService.setMatch(data as WeeklyChallengeMatch);
+                }
+              },
+              error: (error) => {
+                console.error('Match events error:', error);
+              }
+            });
+
+          this.router.navigate(['/challenge/lobby']);
+        },
+        error: (error) => {
+          console.error('Create match failed:', error);
+        }
+      });
   }
 
-  joinMatch() {
+  joinMatch(): void {
     if (!this.joinMatchId || !this.joiningAsUserId) return;
 
     localStorage.setItem('matchId', this.joinMatchId);
     localStorage.setItem('userId', this.joiningAsUserId);
 
-    this.socketService.emit('join_match', {
-      matchId: this.joinMatchId
-    });
+    this.eventsSub?.unsubscribe();
+    this.eventsSub = this.socketService
+      .connectToMatchEvents(this.joinMatchId)
+      .subscribe({
+        next: ({ event, data }) => {
+          if (event === 'match_updated') {
+            this.challengeService.setMatch(data as WeeklyChallengeMatch);
+          }
+        },
+        error: (error) => {
+          console.error('Match events error:', error);
+        }
+      });
 
-    this.router.navigate(['/challenge/lobby']);
+    this.joinedSub?.unsubscribe();
+    this.joinedSub = this.socketService
+      .joinMatch(this.joinMatchId, this.joiningAsUserId)
+      .subscribe({
+        next: ({ match }) => {
+          this.challengeService.setMatch(match);
+          this.router.navigate(['/challenge/lobby']);
+        },
+        error: (error) => {
+          console.error('Join match failed:', error);
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.createdSub?.unsubscribe();
-    this.updatedSub?.unsubscribe();
+    this.joinedSub?.unsubscribe();
+    this.eventsSub?.unsubscribe();
   }
 }

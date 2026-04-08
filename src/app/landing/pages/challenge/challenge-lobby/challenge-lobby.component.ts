@@ -19,9 +19,9 @@ export class ChallengeLobbyComponent implements OnInit, OnDestroy {
   currentUserId = localStorage.getItem('userId') ?? '';
 
   private sub?: Subscription;
-  private matchUpdatedSub?: Subscription;
-  private countdownStartedSub?: Subscription;
-  private matchStartedSub?: Subscription;
+  private eventsSub?: Subscription;
+  private joinSub?: Subscription;
+  private readySub?: Subscription;
   private countdownSub?: Subscription;
 
   constructor(
@@ -31,34 +31,50 @@ export class ChallengeLobbyComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.sub = this.challengeService.match$.subscribe(match => {
+    this.sub = this.challengeService.match$.subscribe((match: WeeklyChallengeMatch | null) => {
       this.match = match;
     });
 
-    this.matchUpdatedSub = this.socketService
-      .on<WeeklyChallengeMatch>('match_updated')
-      .subscribe((match) => {
-        this.challengeService.setMatch(match);
-      });
-
-    this.countdownStartedSub = this.socketService
-      .on<{ seconds: number; match: WeeklyChallengeMatch }>('countdown_started')
-      .subscribe(({ seconds, match }) => {
-        this.countdown = seconds;
-        this.challengeService.setMatch(match);
-        this.startCountdown();
-      });
-
-    this.matchStartedSub = this.socketService
-      .on<WeeklyChallengeMatch>('match_started')
-      .subscribe((match) => {
-        this.challengeService.setMatch(match);
-        this.router.navigate(['/challenge/live']);
-      });
-
     const matchId = localStorage.getItem('matchId');
+
     if (matchId) {
-      this.socketService.emit('join_match', { matchId });
+      this.eventsSub = this.socketService
+        .connectToMatchEvents(matchId)
+        .subscribe({
+          next: ({ event, data }) => {
+            if (event === 'match_updated') {
+              this.challengeService.setMatch(data as WeeklyChallengeMatch);
+            }
+
+            if (event === 'countdown_started') {
+              const payload = data as { seconds: number; match: WeeklyChallengeMatch };
+              this.countdown = payload.seconds;
+              this.challengeService.setMatch(payload.match);
+              this.startCountdown();
+            }
+
+            if (event === 'match_started') {
+              this.challengeService.setMatch(data as WeeklyChallengeMatch);
+              this.router.navigate(['/challenge/live']);
+            }
+          },
+          error: (error) => {
+            console.error('Match events error:', error);
+          }
+        });
+    }
+
+    if (matchId && this.currentUserId) {
+      this.joinSub = this.socketService
+        .joinMatch(matchId, this.currentUserId)
+        .subscribe({
+          next: ({ match }) => {
+            this.challengeService.setMatch(match);
+          },
+          error: (error) => {
+            console.error('Join match failed:', error);
+          }
+        });
     }
   }
 
@@ -67,17 +83,24 @@ export class ChallengeLobbyComponent implements OnInit, OnDestroy {
     return this.match.players.find(player => player.id === this.currentUserId) ?? null;
   }
 
-  markReady() {
+  markReady(): void {
     const matchId = localStorage.getItem('matchId');
     if (!matchId || !this.currentUserId) return;
 
-    this.socketService.emit('player_ready', {
-      matchId,
-      userId: this.currentUserId
-    });
+    this.readySub?.unsubscribe();
+    this.readySub = this.socketService
+      .playerReady(matchId, this.currentUserId)
+      .subscribe({
+        next: ({ match }) => {
+          this.challengeService.setMatch(match);
+        },
+        error: (error) => {
+          console.error('Player ready failed:', error);
+        }
+      });
   }
 
-  startCountdown() {
+  startCountdown(): void {
     this.countdownSub?.unsubscribe();
     this.countdownSub = interval(1000).subscribe(() => {
       this.countdown--;
@@ -90,9 +113,9 @@ export class ChallengeLobbyComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-    this.matchUpdatedSub?.unsubscribe();
-    this.countdownStartedSub?.unsubscribe();
-    this.matchStartedSub?.unsubscribe();
+    this.eventsSub?.unsubscribe();
+    this.joinSub?.unsubscribe();
+    this.readySub?.unsubscribe();
     this.countdownSub?.unsubscribe();
   }
 }
