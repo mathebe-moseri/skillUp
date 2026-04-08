@@ -9,7 +9,9 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('https://server-su-e7aeh0gmfufna0bk.southafricanorth-01.azurewebsites.net');
+    this.socket = io('https://server-su-e7aeh0gmfufna0bk.southafricanorth-01.azurewebsites.net', {
+  transports: ['websocket']
+});
   }
 
   emit(eventName: string, payload: unknown): void {
