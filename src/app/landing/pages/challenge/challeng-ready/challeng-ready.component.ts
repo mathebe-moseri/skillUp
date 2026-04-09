@@ -1,43 +1,30 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  PLATFORM_ID,
-  ViewChild,
-  inject
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
 import { ChallengeService } from '../challenge.service';
 import { WeeklyChallengeMatch } from '../../../../models/challenge.model';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SocketService } from '../../../../shared/socket.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-challeng-ready',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './challeng-ready.component.html',
   styleUrl: './challeng-ready.component.css'
 })
-export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('editorHost', { static: false }) editorHost?: ElementRef<HTMLDivElement>;
-
+export class ChallengReadyComponent implements OnInit, OnDestroy {
   match: WeeklyChallengeMatch | null = null;
   elapsedSeconds = 0;
 
   private sub?: Subscription;
   private timerSub?: Subscription;
   private eventsSub?: Subscription;
+  private joinSub?: Subscription;
   private updateCodeSub?: Subscription;
   private runCodeSub?: Subscription;
   private submitCodeSub?: Subscription;
   private activeFileSub?: Subscription;
-  private monaco: typeof import('monaco-editor') | null = null;
-  private editor: import('monaco-editor').editor.IStandaloneCodeEditor | null = null;
-  private isUpdatingEditor = false;
-  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private challengeService: ChallengeService,
@@ -45,22 +32,8 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
   ) {}
 
   ngOnInit(): void {
-    this.sub = this.challengeService.match$.subscribe((match) => {
+    this.sub = this.challengeService.match$.subscribe((match: WeeklyChallengeMatch | null) => {
       this.match = match;
-
-      if (this.editor && this.activeFileContent !== this.editor.getValue()) {
-        this.isUpdatingEditor = true;
-        this.editor.setValue(this.activeFileContent);
-
-        if (this.monaco && this.editor.getModel()) {
-          this.monaco.editor.setModelLanguage(
-            this.editor.getModel()!,
-            this.getLanguageFromFile(this.activeFileName)
-          );
-        }
-
-        this.isUpdatingEditor = false;
-      }
     });
 
     const matchId = localStorage.getItem('matchId');
@@ -92,7 +65,8 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     if (matchId && userId) {
-      this.socketService.joinMatch(matchId, userId).subscribe({
+      this.joinSub?.unsubscribe();
+      this.joinSub = this.socketService.joinMatch(matchId, userId).subscribe({
         next: ({ match }) => {
           this.challengeService.setMatch(match);
         },
@@ -106,30 +80,6 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
       if (this.match?.status === 'live') {
         this.elapsedSeconds++;
       }
-    });
-  }
-
-  async ngAfterViewInit(): Promise<void> {
-    if (!isPlatformBrowser(this.platformId) || !this.editorHost) return;
-
-    const monaco = await import('monaco-editor');
-    this.monaco = monaco;
-
-    this.editor = monaco.editor.create(this.editorHost.nativeElement, {
-      value: this.activeFileContent,
-      language: this.getLanguageFromFile(this.activeFileName),
-      theme: 'vs-dark',
-      automaticLayout: true,
-      minimap: { enabled: false },
-      fontSize: 14,
-      roundedSelection: true,
-      scrollBeyondLastLine: false,
-      wordWrap: 'on'
-    });
-
-    this.editor.onDidChangeModelContent(() => {
-      if (this.isUpdatingEditor) return;
-      this.updateCode(this.editor?.getValue() ?? '');
     });
   }
 
@@ -231,22 +181,14 @@ export class ChallengReadyComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
-  private getLanguageFromFile(fileName: string): string {
-    if (fileName.endsWith('.ts')) return 'typescript';
-    if (fileName.endsWith('.html')) return 'html';
-    if (fileName.endsWith('.css')) return 'css';
-    if (fileName.endsWith('.json')) return 'json';
-    return 'plaintext';
-  }
-
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.timerSub?.unsubscribe();
     this.eventsSub?.unsubscribe();
+    this.joinSub?.unsubscribe();
     this.updateCodeSub?.unsubscribe();
     this.runCodeSub?.unsubscribe();
     this.submitCodeSub?.unsubscribe();
     this.activeFileSub?.unsubscribe();
-    this.editor?.dispose();
   }
 }

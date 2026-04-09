@@ -15,7 +15,7 @@ export const Learning_Path: navItem[] = [
 
   // { label: 'TypeScript', hasPreview: false, status: 'coming-soon' },
   { label: 'Angular', hasPreview: true, status: 'available' },
-    { label: 'JavaScript', hasPreview: false, status: 'coming-soon' }
+    { label: 'C#', hasPreview: false, status: 'coming-soon' }
 ];
 
 export const Learning_Path_Actions: navItem[] = [

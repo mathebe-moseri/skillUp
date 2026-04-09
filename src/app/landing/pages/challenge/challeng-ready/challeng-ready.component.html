@@ -1,115 +1,55 @@
-<div *ngIf="match as currentMatch" class="challenge-page">
-  <div class="challenge-shell">
-    <div class="top-bar">
-      <div class="top-bar-copy">
-        <div class="screen-badge">Weekly Challenge</div>
-        <h2>{{ currentMatch.task.title }}</h2>
-        <p class="top-bar-subtitle">Compete live, write the solution, and submit before your opponent.</p>
-      </div>
-
-      <div class="timer-card">
-        <span class="timer-label">Elapsed Time</span>
-        <strong class="timer-value">{{ elapsedSeconds }}s</strong>
-      </div>
+<div class="challenge-live" *ngIf="match && me as currentPlayer">
+  <div class="topbar">
+    <div>
+      <h2>{{ match.task.title }}</h2>
+      <p>{{ match.task.description }}</p>
     </div>
 
-    <div class="competition-layout">
-      <aside class="problem-panel">
-        <div class="problem-card">
-          <p class="problem-label">Challenge Brief</p>
-          <p class="problem-description">
-            {{ currentMatch.task.description }}
-          </p>
-          <p class="problem-duration">
-            Time Limit: {{ currentMatch.duration }} seconds
-          </p>
-        </div>
-
-        <div class="score-card">
-          <h3>Your Score</h3>
-          <p>{{ me?.score ?? 0 }}</p>
-        </div>
-
-        <div class="score-card opponent-score">
-          <h3>Opponent Score</h3>
-          <p>{{ opponent?.score ?? 0 }}</p>
-        </div>
-      </aside>
-
-      <main class="editor-panel">
-        <div class="editor-wrapper">
-          <div class="editor-header">
-            <span>Angular Challenge Workspace</span>
-            <span class="status">Live</span>
-          </div>
-
-          <div class="file-tabs" *ngIf="myFileNames.length > 0; else noFilesBlock">
-            <button
-              *ngFor="let fileName of myFileNames"
-              type="button"
-              class="file-tab"
-              [class.active]="fileName === activeFileName"
-              (click)="selectFile(fileName)"
-            >
-              {{ fileName }}
-            </button>
-          </div>
-
-          <ng-template #noFilesBlock>
-            <div class="empty-files">
-              <p>No starter files loaded yet.</p>
-            </div>
-          </ng-template>
-
-          <div #editorHost class="editor-host"></div>
-        </div>
-      </main>
-
-      <aside class="status-panel">
-        <div
-          class="player-status-card"
-          [style.--progress]="(me?.progress ?? 0) + '%'"
-        >
-          <div class="status-top-line"></div>
-          <h3>You</h3>
-          <p class="player-name">{{ me?.displayName }}</p>
-          <p class="player-meta">Progress: {{ me?.progress ?? 0 }}%</p>
-          <p class="player-meta">Status: {{ me?.completed ? 'Submitted' : 'Coding' }}</p>
-        </div>
-
-        <div
-          class="player-status-card opponent-card"
-          [style.--progress]="(opponent?.progress ?? 0) + '%'"
-        >
-          <div class="status-top-line"></div>
-          <h3>Opponent</h3>
-          <p class="player-name">{{ opponent?.displayName }}</p>
-          <p class="player-meta">Progress: {{ opponent?.progress ?? 0 }}%</p>
-          <p class="player-meta">Status: {{ opponent?.completed ? 'Submitted' : 'Coding' }}</p>
-        </div>
-
-        <div class="action-stack">
-          <button type="button" class="primary-btn" (click)="runCode()">
-            Run Code
-          </button>
-
-          <button type="button" class="secondary-btn" (click)="submitCode()">
-            Submit
-          </button>
-        </div>
-      </aside>
-    </div>
-
-    <div *ngIf="currentMatch.status === 'finished'" class="result-box">
-      <p class="result-label">Match Result</p>
-      <h3>
-        Winner:
-        {{
-          currentMatch.players[0].id === currentMatch.winnerId
-            ? currentMatch.players[0].displayName
-            : currentMatch.players[1].displayName
-        }}
-      </h3>
+    <div class="status">
+      <div>Time: {{ elapsedSeconds }}s</div>
+      <div>Status: {{ match.status }}</div>
+      <div *ngIf="opponent">
+        Opponent: {{ opponent.displayName || opponent.realName || opponent.id }}
+      </div>
     </div>
   </div>
+
+  <div class="workspace">
+    <aside class="files">
+      <h3>Files</h3>
+
+      <button
+        type="button"
+        *ngFor="let fileName of myFileNames"
+        (click)="selectFile(fileName)"
+        [class.active]="fileName === activeFileName">
+        {{ fileName }}
+      </button>
+    </aside>
+
+    <section class="editor-panel">
+      <div class="editor-header">
+        <span>{{ activeFileName || 'No file selected' }}</span>
+
+        <div class="actions">
+          <button type="button" (click)="runCode()">Run</button>
+          <button type="button" (click)="submitCode()">Submit</button>
+        </div>
+      </div>
+
+      <textarea
+        class="editor"
+        [value]="activeFileContent"
+        (input)="updateCode($any($event.target).value)"
+        spellcheck="false"
+        autocapitalize="off"
+        autocomplete="off"
+        autocorrect="off">
+      </textarea>
+    </section>
+  </div>
+</div>
+
+<div *ngIf="!match" class="empty-state">
+  Loading match...
 </div>
