@@ -8,17 +8,22 @@ export const DEMO_USERS = [
   },
   {
     id: 'u2',
-    realName: 'Makutla',
+    realName: 'Mafalo',
     avatar: 'assets/avatars/user-2.png'
   },
     {
     id: 'u1',
-    realName: 'Nthuse',
+    realName: 'Makutla',
     avatar: 'assets/avatars/user-1.png'
   },
   {
     id: 'u2',
     realName: 'Makoma',
+    avatar: 'assets/avatars/user-2.png'
+  },
+    {
+    id: 'u2',
+    realName: 'Moseri',
     avatar: 'assets/avatars/user-2.png'
   }
 ];
